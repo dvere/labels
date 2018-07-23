@@ -88,7 +88,7 @@ function doLabels(items) {
     w.document.open();
     w.document.write("<pre>" + fmt + tt + '}$</pre>');
     w.document.close();
-    var r = w.document.execCommand('print', false, null);
+    var r = w.contentWindow.document.execCommand('print', false, null);
     if (!r) w.print()
     w.close();
 }
