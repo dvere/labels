@@ -88,9 +88,9 @@ function doLabels(items) {
     w.document.open();
     w.document.write("<pre>" + fmt + tt + '}$</pre>');
     w.document.close();
+    w.close();
     var r = document.querySelector('[name=oframe]').contentWindow.document.execCommand('print', false, null);
     if (!r) w.print()
-    w.close();
 }
 
 $.when($.ready).then(function() {
