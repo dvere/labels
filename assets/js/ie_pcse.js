@@ -1,4 +1,4 @@
-var fmt = '
+var fmt = '\
   ${^XA^DFR:DELIVERY.GRF^PON^LH10,5\n\
     ^FO5,5^GB780,1200,4^FS\n\
     ^FO5,240^GB780,860,3^FS\n\
