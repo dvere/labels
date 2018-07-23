@@ -18,7 +18,8 @@ var fmt = '\
     ^FO150,870^A0N,24^FN5^FS\n\
     ^FO150,900^A0N,24^FN6^FS\n\
     ^FO15,1000^A0N,100^FB780,1,0,C^FN8^FS\n\
-    ^FO170,1120^BY2^BCN,55,Y^FN7^FS\n^XZ\n\ ';
+    ^FO170,1120^BY2^BCN,55,Y^FN7^FS\n^XZ\n\
+';
 
 var serviceCentres = {
     BASINGSTOKE: 'BS',
