@@ -100,7 +100,6 @@ function doLabels(items) {
     
     $('body').removeAttr("style");
     
-    $('#output').remove();
 }
 
 $.when($.ready).then(function() {
