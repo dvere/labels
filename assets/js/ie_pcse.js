@@ -85,11 +85,10 @@ function doLabels(items) {
     }
     // create, write, print and destroy ZPL content document
     var w = window.open("about:blank", "oframe");
-    w.id = 'output';
     w.document.open();
     w.document.write("<pre>" + fmt + tt + '}$</pre>');
     w.document.close();
-    w.print();
+    w.document.print();
     w.close();
 }
 
