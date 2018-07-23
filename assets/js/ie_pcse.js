@@ -84,21 +84,29 @@ function doLabels(items) {
             '^FN8^FDPieces: ' + i + ' of ' + qty + '^FS' + le;
     }
     // create, write, print and destroy ZPL content
-    $('body').css({display: 'none'});
-    $('<div>', {id: 'output'}).css({
-        display: 'block',
-        position: 'fixed',
-        top: 0,
-        right: 0,
-        bottom: 0,
-        left: 0,
-        zIndex: 9999,
-        background-color: white,
-        }).html('<pre>'+ fmt + tt + '}$</pre>').appendTo($('html');
+    $('body').css({'visibility': 'hidden'});
+    $('<div>', {id: 'output'}).appendTo($('body'));
+    
+    $('#output').css({ 
+        'display': 'block',
+        'position': 'fixed',
+        'top': 0,
+        'left': 0,
+        'bottom': 0,
+        'right': 0
+    }).html('<pre>'+ fmt + tt + '}$</pre>');
+
+    $('#output pre').css({
+            'border-style': 'none',
+            'border-color': 'transparent',
+            'color': 'black',
+            'background-color': 'white'
+    });
 
     window.print();
     
-    $('body').removeAttr("style");
+    $('#output').remove();
+    $('body').removeAttr('style');
     
 }
 
@@ -121,12 +129,6 @@ $.when($.ready).then(function() {
         var v =  $('.pcss-order-summary').find('.col-md-7').eq(i).text().trim();
         orderDetail[$(e).text()] = v;
     });
-
-    $("<iframe>", { 
-        name: 'oframe', 
-        hidden: 'hidden', 
-        id: 'output'
-     }).appendTo('body');
 
     var deliveryDate = orderDetail['Expected Delivery Date'];
 
