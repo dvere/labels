@@ -92,7 +92,7 @@ function doLabels(items) {
         right: 0,
         bottom: 0,
         left: 0,
-        z-index: 9999,
+        zIndex: 9999,
         background-color: white,
         }).html('<pre>'+ fmt + tt + '}$</pre>').appendTo($('html');
 
