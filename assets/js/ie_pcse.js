@@ -83,12 +83,24 @@ function doLabels(items) {
         tt += ls + lm + '\n' +
             '^FN8^FDPieces: ' + i + ' of ' + qty + '^FS' + le;
     }
-    // create, write, print and destroy ZPL content document
-    var w = window.open("", "oframe");
-    w.document.open();
-    w.document.write(fmt + tt + '}$');
-    w.document.close();
-    w.close();
+    // create, write, print and destroy ZPL content
+    $('body').css({display: 'none'});
+    $('<div>', {id: 'output'}).css({
+        display: 'block',
+        position: 'fixed',
+        top: 0,
+        right: 0,
+        bottom: 0,
+        left: 0,
+        z-index: 9999,
+        background-color: white,
+        }).html('<pre>'+ fmt + tt + '}$</pre>').appendTo($('html');
+
+    window.print();
+    
+    $('body').removeAttr("style");
+    
+    $('#output').remove();
 }
 
 $.when($.ready).then(function() {
