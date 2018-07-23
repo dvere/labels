@@ -84,13 +84,10 @@ function doLabels(items) {
             '^FN8^FDPieces: ' + i + ' of ' + qty + '^FS' + le;
     }
     // create, write, print and destroy ZPL content document
-    var w = window.open("about:blank", "oframe");
+    var w = window.open("", "oframe");
     w.document.open();
-    w.document.write("<pre>" + fmt + tt + '}$</pre>');
+    w.document.write(fmt + tt + '}$');
     w.document.close();
-    var c = document.querySelector('[name=oframe]').contentWindow;
-    var r = c.document.execCommand('print', false, null);
-    if (!r) w.print()
     w.close();
 }
 
@@ -114,7 +111,11 @@ $.when($.ready).then(function() {
         orderDetail[$(e).text()] = v;
     });
 
-    $("<iframe>", { name: 'oframe', hidden: 'hidden' }).appendTo('body');
+    $("<iframe>", { 
+        name: 'oframe', 
+        hidden: 'hidden', 
+        id: 'output'
+     }).appendTo('body');
 
     var deliveryDate = orderDetail['Expected Delivery Date'];
 
