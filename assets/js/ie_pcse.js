@@ -94,7 +94,8 @@ function doLabels(items) {
         'top': 0,
         'left': 0,
         'bottom': 0,
-        'right': 0
+        'right': 0,
+        'z-index': 9999
     }).html('<pre>'+ fmt + tt + '}$</pre>');
 
     $('#output pre').css({
