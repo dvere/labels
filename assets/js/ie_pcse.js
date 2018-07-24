@@ -88,6 +88,7 @@ function doLabels(items) {
     $('<div>', {id: 'output'}).appendTo($('body'));
 
     $('#output').css({
+        'visibility': 'visible',
         'display': 'block',
         'position': 'fixed',
         'top': 0,
