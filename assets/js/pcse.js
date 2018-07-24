@@ -1,4 +1,4 @@
-var fmt = '${^XA^DFR:DELIVERY.GRF^PON^LH10,5\n\
+var fmt = '${^XA^DFR:DELIVERY.GRF^PON^LS7^LH0,10\n\
     ^FO5,5^GB780,1200,4^FS\n\
     ^FO5,240^GB780,860,3^FS\n\
     ^FO5,420^GB480,180,3^FS\n\
@@ -18,28 +18,14 @@ var fmt = '${^XA^DFR:DELIVERY.GRF^PON^LH10,5\n\
     ^FO150,900^A0N,24^FN6^FS\n\
     ^FO15,1000^A0N,100^FB780,1,0,C^FN8^FS\n\
     ^FO170,1120^BY2^BCN,55,Y^FN7^FS\n^XZ\n\
-    ';
+';
+
 var serviceCentres = {
-    BASINGSTOKE: 'BS',
-    BECKTON: 'CV',
-    BIRMINGHAM: 'BP',
-    BRISTOL: 'BL',
-    CAMBRIDGE: 'CB',
-    GATWICK: 'CW',
-    LEEDS: 'LD',
-    LETCHWORTH: 'LE',
-    MANCHESTER: 'MA',
-    MEDWAY: 'ME',
-    MILTON: 'MK',
-    NEWCASTLE: 'NE',
-    NORWICH: 'NR',
-    NOTTINGHAM: 'NG',
-    PLYMOUTH: 'PL',
-    READING: 'NB',
-    SLOUGH: '3S',
-    SOUTHAMPTON: 'SO',
-    SWINDON: 'SW',
-    TELFORD: 'TF',
+    BASINGSTOKE: 'BS', BECKTON: 'CV', BIRMINGHAM: 'BP', BRISTOL: 'BL',
+    CAMBRIDGE: 'CB', GATWICK: 'CW', LEEDS: 'LD', LETCHWORTH: 'LE',
+    MANCHESTER: 'MA', MEDWAY: 'ME', MILTON: 'MK', NEWCASTLE: 'NE',
+    NORWICH: 'NR', NOTTINGHAM: 'NG', PLYMOUTH: 'PL', READING: 'NB',
+    SLOUGH: '3S', SOUTHAMPTON: 'SO', SWINDON: 'SW', TELFORD: 'TF',
     WARWICK: 'MC'
 };
 
@@ -75,21 +61,38 @@ function doLabels(items) {
     items = items.map(function(value, index) {
         return "^FN" + index + "^FD" + value + "^FS";
     });
-    var lm = items.join( "\n" );
-	var i = qty;
-    var tt = '';
+    var lm = items.join( "\n" ), i = qty, tt = '';
     for (; i > 0; i--) {
         tt += ls + lm + '\n' +
             '^FN8^FDPieces: ' + i + ' of ' + qty + '^FS' + le;
     }
-    // create, write, print and destroy ZPL content document
-    var w = window.open("about:blank", "oframe");
-    w.document.open();
-    w.document.write("<pre>" + fmt + tt + '}$</pre>');
-    w.document.close();
-    w.print();
-    w.close();
-    w.opener.focus();
+    // write, print and destroy ZPL content
+    $('body').css({'visibility': 'hidden'});
+    $('<div>', {id: 'output'}).appendTo($('body'));
+
+    $('#output').css({
+        'visibility': 'visible',
+        'display': 'block',
+        'position': 'fixed',
+        'top': 0,
+        'left': 0,
+        'bottom': 0,
+        'right': 0,
+        'z-index': 9999
+    }).html('<pre>'+ fmt + tt + '}$</pre>');
+
+    $('#output pre').css({
+            'border-style': 'none',
+            'border-color': 'transparent',
+            'color': 'black',
+            'background-color': 'white'
+    });
+
+    window.print();
+
+    $('#output').remove();
+    $('body').removeAttr('style');
+
 }
 
 $.when($.ready).then(function() {
@@ -99,7 +102,7 @@ $.when($.ready).then(function() {
 
     var qty = prompt("Enter number of packages:", 1);
     if (qty == null || qty == "" || isNaN(qty)) {
-        console.log("Input quantity error");
+        console.log("Input quantity error or cancelled by user");
             return;
        };
 	var orderId = $('h3').eq(0).text().trim().split(' ')[2];
@@ -112,10 +115,7 @@ $.when($.ready).then(function() {
         orderDetail[$(e).text()] = v;
     });
 
-    $("<iframe>", { name: 'oframe', hidden: 'hidden' }).appendTo('body');
-
     var deliveryDate = orderDetail['Expected Delivery Date'];
-
     deliveryDate = deliveryDate.split('/').reverse().join('-');
 
     var address = orderDetail['Shipping Address'].split(',');
@@ -136,4 +136,3 @@ $.when($.ready).then(function() {
     getTrackingId(orderId, deliveryDate, items);
 
 });
-
