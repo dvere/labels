@@ -61,8 +61,8 @@ function doLabels(items) {
     items = items.map(function(value, index) {
         return "^FN" + index + "^FD" + value + "^FS";
     });
-    var lm = items.join( "\n" ), i = qty, tt = '';
-    for (; i > 0; i--) {
+    var lm = items.join( "\n" ), tt = '';
+    for (var i = qty; i > 0; i--) {
         tt += ls + lm + '\n' +
             '^FN8^FDPieces: ' + i + ' of ' + qty + '^FS' + le;
     }
@@ -73,10 +73,9 @@ function doLabels(items) {
     $('#output').css({
         'visibility': 'visible',
         'display': 'block',
-        'position': 'fixed',
+        'position': 'absolute',
         'top': 0,
         'left': 0,
-        'bottom': 0,
         'right': 0,
         'z-index': 9999
     }).html('<pre>'+ fmt + tt + '}$</pre>');
