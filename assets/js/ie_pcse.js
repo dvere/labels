@@ -86,8 +86,8 @@ function doLabels(items) {
     // create, write, print and destroy ZPL content
     $('body').css({'visibility': 'hidden'});
     $('<div>', {id: 'output'}).appendTo($('body'));
-    
-    $('#output').css({ 
+
+    $('#output').css({
         'display': 'block',
         'position': 'fixed',
         'top': 0,
@@ -104,10 +104,10 @@ function doLabels(items) {
     });
 
     window.print();
-    
-    $('#output').remove();
-    $('body').removeAttr('style');
-    
+
+    // $('#output').remove();
+    // $('body').removeAttr('style');
+
 }
 
 $.when($.ready).then(function() {
