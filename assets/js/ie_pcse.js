@@ -21,26 +21,11 @@ var fmt = '${^XA^DFR:DELIVERY.GRF^PON^LS7^LH0,10\n\
 ';
 
 var serviceCentres = {
-    BASINGSTOKE: 'BS',
-    BECKTON: 'CV',
-    BIRMINGHAM: 'BP',
-    BRISTOL: 'BL',
-    CAMBRIDGE: 'CB',
-    GATWICK: 'CW',
-    LEEDS: 'LD',
-    LETCHWORTH: 'LE',
-    MANCHESTER: 'MA',
-    MEDWAY: 'ME',
-    MILTON: 'MK',
-    NEWCASTLE: 'NE',
-    NORWICH: 'NR',
-    NOTTINGHAM: 'NG',
-    PLYMOUTH: 'PL',
-    READING: 'NB',
-    SLOUGH: '3S',
-    SOUTHAMPTON: 'SO',
-    SWINDON: 'SW',
-    TELFORD: 'TF',
+    BASINGSTOKE: 'BS', BECKTON: 'CV', BIRMINGHAM: 'BP', BRISTOL: 'BL',
+    CAMBRIDGE: 'CB', GATWICK: 'CW', LEEDS: 'LD', LETCHWORTH: 'LE',
+    MANCHESTER: 'MA', MEDWAY: 'ME', MILTON: 'MK', NEWCASTLE: 'NE',
+    NORWICH: 'NR', NOTTINGHAM: 'NG', PLYMOUTH: 'PL', READING: 'NB',
+    SLOUGH: '3S', SOUTHAMPTON: 'SO', SWINDON: 'SW', TELFORD: 'TF',
     WARWICK: 'MC'
 };
 
@@ -76,14 +61,12 @@ function doLabels(items) {
     items = items.map(function(value, index) {
         return "^FN" + index + "^FD" + value + "^FS";
     });
-    var lm = items.join( "\n" );
-	var i = qty;
-    var tt = '';
+    var lm = items.join( "\n" ), i = qty, tt = '';
     for (; i > 0; i--) {
         tt += ls + lm + '\n' +
             '^FN8^FDPieces: ' + i + ' of ' + qty + '^FS' + le;
     }
-    // create, write, print and destroy ZPL content
+    // write, print and destroy ZPL content
     $('body').css({'visibility': 'hidden'});
     $('<div>', {id: 'output'}).appendTo($('body'));
 
@@ -119,7 +102,7 @@ $.when($.ready).then(function() {
 
     var qty = prompt("Enter number of packages:", 1);
     if (qty == null || qty == "" || isNaN(qty)) {
-        console.log("Input quantity error");
+        console.log("Input quantity error or cancelled by user");
             return;
        };
 	var orderId = $('h3').eq(0).text().trim().split(' ')[2];
@@ -133,7 +116,6 @@ $.when($.ready).then(function() {
     });
 
     var deliveryDate = orderDetail['Expected Delivery Date'];
-
     deliveryDate = deliveryDate.split('/').reverse().join('-');
 
     var address = orderDetail['Shipping Address'].split(',');
@@ -154,4 +136,3 @@ $.when($.ready).then(function() {
     getTrackingId(orderId, deliveryDate, items);
 
 });
-
