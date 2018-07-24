@@ -89,8 +89,8 @@ function doLabels(items) {
 
     window.print();
 
-    $('#output').remove();
-    $('body').removeAttr('style');
+//    $('#output').remove();
+//    $('body').removeAttr('style');
 
 }
 
