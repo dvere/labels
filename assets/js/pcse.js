@@ -1,9 +1,13 @@
-function getTrackingId(orderId,deliveryDate,items) {
+function getTrackingId(orderId,edDate,items) {
 
-    var pcseData = { tab: 'ReadyForDespatch', SearchOn: 5 };
-    pcseData.DateRangeStart = pcseData.DateRangeEnd = deliveryDate;
+    let pcseData = { tab: 'ReadyForDespatch'};
+    if (edDate != 'TBA') { 
+        edDate = edDate.split('/').reverse().join('-');
+        pcseData.DateRangeStart = pcseData.DateRangeEnd = edDate;
+        pcseData.SearchOn = 5; 
+    }
 
-    var pcseInit = {
+    let pcseInit = {
         url: '/portal/Logistics/Orders',
         xhrFields: {
             withCredentials: true
@@ -111,9 +115,7 @@ $.when($.ready).then(function() {
         orderDetail[$(e).text()] = v;
     });
 
-    var deliveryDate = orderDetail['Expected Delivery Date'];
-    deliveryDate = deliveryDate.split('/').reverse().join('-');
-
+    var edDate = orderDetail['Expected Delivery Date'];
     var address = orderDetail['Shipping Address'].split(',');
     var address_1 = address.shift();
     var postcode = address.pop();
@@ -128,5 +130,5 @@ $.when($.ready).then(function() {
         orderId,
         qty
     ];
-    getTrackingId(orderId, deliveryDate, items);
+    getTrackingId(orderId, edDate, items);
 });
