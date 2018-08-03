@@ -1,2 +1,4 @@
 /.vs
 .vscode/launch.json
+config.php
+sites.php
