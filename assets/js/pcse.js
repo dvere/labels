@@ -1,6 +1,6 @@
-function getTrackingId(orderId,edDate,items) {
+function getTrackingId(orderId, edDate, items, tab) {
 
-    let pcseData = { tab: 'ReadyForDespatch'};
+    let pcseData = { tab: tab};
     if (edDate != 'TBA') { 
         edDate = edDate.split('/').reverse().join('-');
         pcseData.DateRangeStart = pcseData.DateRangeEnd = edDate;
@@ -13,7 +13,7 @@ function getTrackingId(orderId,edDate,items) {
             withCredentials: true
         },
         method: 'GET',
-        dataType: "html",
+        dataType: 'html',
         data: pcseData
         }
     $.ajax(pcseInit).done(function(data) {
@@ -89,8 +89,18 @@ function doLabels(items) {
 }
 
 $.when($.ready).then(function() {
+    var tab;
     if (window.location.pathname.split('/')[3] != 'Order') return;
-    if ($('#OrderStatusId').val() != 141560002) return;
+    var status = $('#OrderStatusId').val();
+    if ( status == 141560002 ) {
+        tab = 'ReadyForDespatch';
+    }
+    else if (status == 141560003) {
+        tab = 'Despatched';
+    }
+    else {
+        return;
+    }
 
     var qty = prompt("Enter number of packages:", 1);
     if (qty == null || qty == "" || isNaN(qty)) {
@@ -130,5 +140,5 @@ $.when($.ready).then(function() {
         orderId,
         qty
     ];
-    getTrackingId(orderId, edDate, items);
+    getTrackingId(orderId, edDate, items, tab);
 });
