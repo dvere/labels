@@ -98,6 +98,9 @@ $.when($.ready).then(function() {
     else if (status == 141560003) {
         tab = 'Despatched';
     }
+    else if (status == 3) {
+        tab = 'InProgress';
+    }
     else {
         return;
     }
