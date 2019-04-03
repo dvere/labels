@@ -92,13 +92,13 @@ $.when($.ready).then(function() {
     var tab;
     if (window.location.pathname.split('/')[3] != 'Order') return;
     var status = $('#OrderStatusId').val();
-    if ( status === 141560002 ) {
+    if ( status == 141560002 ) {
         tab = 'ReadyForDespatch';
     }
-    else if (status === 141560003) {
+    else if (status == 141560003) {
         tab = 'Despatched';
     }
-    else if (status === 100001) {
+    else if (status == 100001) {
         tab = 'Complete';
     }
     else {
