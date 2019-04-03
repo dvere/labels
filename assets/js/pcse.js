@@ -99,7 +99,7 @@ $.when($.ready).then(function() {
         tab = 'Despatched';
     }
     else if (status === 100001) {
-        tab = 'Delivered';
+        tab = 'Complete';
     }
     else {
         return;
