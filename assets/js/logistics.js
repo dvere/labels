@@ -99,25 +99,26 @@ function getCollectedCons() {
 
   $.getJSON(url, data, function(json){
     $.each(json, function(i, obj) {
-    if(obj.status != 'DELIVERED') {
-      var cConsignment = $('<div>', {class: 'consignment'})
-        .css({
-          display: 'grid',
-          gridTemplateColumns: '120px 80px 80px 80px 140px'
+      if(obj.status != 'DELIVERED') {
+        var cConsignment = $('<div>', {class: 'consignment'})
+          .css({
+            display: 'grid',
+            gridTemplateColumns: '120px 80px 80px 80px 140px'
         });
 
-      $('<div>', {'class': 'consignment-item', 'text': obj.tracking_number, 'onclick': 'showEvents(' + obj.id + ')', 'id': obj.id}).appendTo(cConsignment);
-      $('<div>', {'class': 'consignment-item', 'text': obj.package_type}).appendTo(cConsignment);
-      $('<div>', {'class': 'consignment-item', 'text': obj.requested_route}).appendTo(cConsignment);
-      $('<div>', {'class': 'consignment-item', 'text': obj.consolidation_id}).appendTo(cConsignment);
-      $('<div>', {'class': 'consignment-item', 'text': obj.status}).appendTo(cConsignment);
-      $('#cons').append(cConsignment);
-    };
+        $('<div>', {'class': 'consignment-item', 'text': obj.tracking_number, 'onclick': 'showEvents(' + obj.id + ')', 'id': obj.id}).appendTo(cConsignment);
+        $('<div>', {'class': 'consignment-item', 'text': obj.package_type}).appendTo(cConsignment);
+        $('<div>', {'class': 'consignment-item', 'text': obj.requested_route}).appendTo(cConsignment);
+        $('<div>', {'class': 'consignment-item', 'text': obj.consolidation_id}).appendTo(cConsignment);
+        $('<div>', {'class': 'consignment-item', 'text': obj.status}).appendTo(cConsignment);
+        $('#cConsignments').append(cConsignment);
+      };
+    });
+    $('.consignment-item').css({padding: 4, border: '1px solid rgba(0,0,0,1)', borderTopStyle: 'none'});
   })
     .fail(function(){
       console.log('Consignments Request Failed');
-  });
-  $('.consignment-item').css({padding: 4, border: '1px solid rgba(0,0,0,1)', borderTopStyle: 'none'});    
+  });    
 }
 
 function addPartsToDOM(){
