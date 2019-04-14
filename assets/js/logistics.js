@@ -116,7 +116,8 @@ function addPartsToDOM(){
 	$('#goButton').css({lineHeight: '1.3em',marginLeft: 4});
 	$('#cTarget').click(function(){
     $(this).slideUp();
-  });
+  })
+  .css({position: 'fixed', top: 0, left: 0, width: '100%', height: '100%', backgroundColor: 'rgba(0,0,0,.85)'});
 };
 
 $.when($.ready).then(function() {
