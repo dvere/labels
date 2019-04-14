@@ -131,7 +131,7 @@ function addPartsToDOM(){
   $('#breadcrumbs').after(cInsert);
 	$('#cDate').css({lineHeight: '1.2em', marginLeft: 20});
 	$('#cButton').css({lineHeight: '1.3em',marginLeft: 4});
-	$('#cAudit').click(function(){
+	$('#cAudits').click(function(){
     $(this).fadeOut();
   })
   .css({display: 'none', position: 'fixed', top: 0, left: 0, width: '100%', height: '100%', backgroundColor: 'rgba(0,0,0,.75)', zIndex: '999'});
