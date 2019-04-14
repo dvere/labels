@@ -117,4 +117,4 @@ function addPartsToDOM(){
 
 $.when($.ready).then(function() {
 	addPartsToDOM();
-}
+});
