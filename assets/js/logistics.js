@@ -31,7 +31,7 @@ function showEvents(t){
           display: 'grid',
           gridTemplateColumns: '140px 40px 180px 140px',
           color: 'rgba(255,255,255,1)',
-          backgroundColor: 'rgba(55,55,55,1)
+          backgroundColor: 'rgba(55,55,55,1)'
         });
 
   $.each(['Timestamp', 'SC','Event','User'], function(){
