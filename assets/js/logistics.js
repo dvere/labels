@@ -19,26 +19,22 @@ var url = '/consignments/',
 
 function showEvents(t){
   var u = '/consignments/' + t + '/events';
-
+  var cd = $('<div>', {'id': 'audit-container'});
+  
   $.getJSON(u,function(json){
-    formatEvents(json);
+    $.each(json, function(i, obj) {
+      obj.service_centre = obj.service_centre || {code: 'NA'};
+      obj.user = obj.user || {username: 'NA'};
+      $('<div>', {'class': 'audit', 'text': obj.timestamp}).appendTo(cd);
+      $('<div>', {'class': 'audit', 'text': obj.service_centre.code}).appendTo(cd);
+      $('<div>', {'class': 'audit', 'text': obj.tracking_code.code}).appendTo(cd);
+      $('<div>', {'class': 'audit', 'text': obj.user.username}).appendTo(cd);
+    });
+    $('#cTarget').append(cd);
+    $('#cTarget').show();
   }).fail(function(){
     console.log('Events Request Failed');
   });
-}
-
-function formatEvents(json){
-  var cd = $('<div>', {'id': 'audit-container'});
-  $.each(json, function(i, obj) {
-    obj.service_centre = obj.service_centre || {code: 'NA'};
-    obj.user = obj.user || {username: 'NA'};
-    $('<div>', {'class': 'audit', 'text': obj.timestamp}).appendTo(cd);
-    $('<div>', {'class': 'audit', 'text': obj.service_centre.code}).appendTo(cd);
-    $('<div>', {'class': 'audit', 'text': obj.tracking_code.code}).appendTo(cd);
-    $('<div>', {'class': 'audit', 'text': obj.user.username}).appendTo(cd);
-  });
-  $('#cTarget').innerHTML = cd;
-  $('#cTarget').show();
 }
 
 function getCollectedCons() {
@@ -107,7 +103,7 @@ function addPartsToDOM(){
   var ed = $('<div>',{'class':'ed'})
     .append($('<input>', {'class':'cDate', 'type':'date'}))
     .append($('<button>', {'id': 'goButton', 'text': 'Lookup Collections', 'onclick': 'getCollectedCons()'}))
-    .append($('<div>', {'class':'modal', 'id':'cTarget', 'style':'display:none'}))
+    .append($('<div>', {'id':'cTarget', 'style':'display:none'}))
     .append($('<table>', {'id': 'cons'}).css({marginLeft: 20}));
   $('#breadcrumbs').after(ed);
 	$('.cDate').css({lineHeight: '1.2em', marginLeft: 20});
