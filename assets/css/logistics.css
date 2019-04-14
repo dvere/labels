@@ -5,6 +5,7 @@
   top: 50%;
   transform: translate(-50%, -50%);
   padding: 40px;
+  max-height: 90%;
   background-color: white;
   zIndex: 999;
   overflow-y: auto;
