@@ -23,9 +23,11 @@ function showEvents(t){
       .css({
         margin: '140px auto',
         width: 580,
+        height: 400,
         padding: 40,
         backgroundColor: 'white',
-        zIndex: '999'
+        zIndex: '999',
+        overflowY: 'scroll'
       }),
       cHeader = $('<div>',{class: 'events-header'})
         .css({
@@ -44,8 +46,8 @@ function showEvents(t){
       .appendTo(cHeader);
   });
   
-  $('#cTarget').empty();
-  $('#cTarget').append(cEvents);
+  $('#cAudits').empty();
+  $('#cAudits').append(cEvents);
   $('#cEvents').append(cHeader);
   
   $.getJSON(u,function(json){
@@ -65,7 +67,7 @@ function showEvents(t){
     });
     $('.event').css({border: '1px solid rgba(0,0,0,.7)', borderTopStyle: 'none', backgroundColor: 'white'});
     $('.event-item').css({padding: 4});
-    $('#cTarget').fadeIn();
+    $('#cAudits').fadeIn();
   })
     .fail(function(){
       console.log('Events Request Failed');
@@ -73,51 +75,62 @@ function showEvents(t){
 }
 
 function getCollectedCons() {
-  var consList;
-  $('#cons').empty();
-  
-  data.received_at = $('.cDate').val();
-  
-  $.getJSON(url, data, function(json){
-    formatCons(json);
-  }).fail(function(){
-    console.log('Request Failed');
-  });  
-}
+  var cHeader = $('<div>',{class: 'consignments-header'})
+    .css({
+      display: 'grid',
+      gridTemplateColumns: '120px 80px 80px 80px 140px',
+      color: 'rgba(255,255,255,1)',
+      backgroundColor: 'rgba(55,55,55,1)'
+    });
 
-function formatCons(json){
-  $.each(json, function(i, obj) {
-    if(obj.status != 'DELIVERED') {
-      var tr = $('<tr/>');
-
-      $('<td>', {
-        'class': 'results-data',
-        'text': obj.tracking_number,
-        'onclick': 'showEvents(' + obj.id + ')',
-        'id': obj.id
-      }).appendTo(tr);
-
-      $('<td>', {'class': 'results-data', 'text': obj.package_type}).appendTo(tr);
-      $('<td>', {'class': 'results-data', 'text': obj.requested_route}).appendTo(tr);
-      $('<td>', {'class': 'results-data', 'text': obj.consolidation_id}).appendTo(tr);
-      $('<td>', {'class': 'results-data', 'text': obj.status}).appendTo(tr);
-      $('#cons').append(tr);
-    }
+  $.each(['Traking No','Type','Route','Location','Status'], function(i, t){
+    $('<div>',{
+      class: 'consignments-header-item',
+      text: t
+    })
+      .css({padding: 4})
+      .appendTo(cHeader);
   });
-  $('.results-data').css({padding: 4, border: '1px solid rgba(0,0,0,1)', borderTopStyle: 'none'});
+  
+  $('#cConsignments').empty();
+  $('#cConsignments').append(cHeader);
+
+  data.received_at = $('.cDate').val();
+
+  $.getJSON(url, data, function(json){
+    $.each(json, function(i, obj) {
+    if(obj.status != 'DELIVERED') {
+      var cConsignment = $('<div>', {class: 'consignment'})
+        .css({
+          display: 'grid',
+          gridTemplateColumns: '120px 80px 80px 80px 140px'
+        });
+
+      $('<div>', {'class': 'consignment-item', 'text': obj.tracking_number, 'onclick': 'showEvents(' + obj.id + ')', 'id': obj.id}).appendTo(cConsignment);
+      $('<div>', {'class': 'consignment-item', 'text': obj.package_type}).appendTo(cConsignment);
+      $('<div>', {'class': 'consignment-item', 'text': obj.requested_route}).appendTo(cConsignment);
+      $('<div>', {'class': 'consignment-item', 'text': obj.consolidation_id}).appendTo(cConsignment);
+      $('<div>', {'class': 'consignment-item', 'text': obj.status}).appendTo(cConsignment);
+      $('#cons').append(cConsignment);
+    };
+  })
+    .fail(function(){
+      console.log('Consignments Request Failed');
+  });
+  $('.consignment-item').css({padding: 4, border: '1px solid rgba(0,0,0,1)', borderTopStyle: 'none'});    
 }
 
 function addPartsToDOM(){
-  $('div.ed').remove();
-  var ed = $('<div>',{'class':'ed'})
-    .append($('<input>', {'class':'cDate', 'type':'date'}))
-    .append($('<button>', {'id': 'goButton', 'text': 'Lookup Collections', 'onclick': 'getCollectedCons()'}))
-    .append($('<div>', {'id':'cTarget', 'style':'display:none'}))
-    .append($('<table>', {'id': 'cons'}).css({marginLeft: 20}));
-  $('#breadcrumbs').after(ed);
-	$('.cDate').css({lineHeight: '1.2em', marginLeft: 20});
-	$('#goButton').css({lineHeight: '1.3em',marginLeft: 4});
-	$('#cTarget').click(function(){
+  $('#cInsert').remove();
+  var cInsert = $('<div>',{'id':'cInsert'})
+    .append($('<input>', {'id':'cDate', 'type':'date'}))
+    .append($('<button>', {'id': 'cButton', 'text': 'Lookup Collections', 'onclick': 'getCollectedCons()'}))
+    .append($('<div>', {'id': 'cConsignments'}).css({width: 580, margin: '0 auto'}))
+    .append($('<div>', {'id':'cAudits', 'style':'display:none'}));
+  $('#breadcrumbs').after(cInsert);
+	$('#cDate').css({lineHeight: '1.2em', marginLeft: 20});
+	$('#cButton').css({lineHeight: '1.3em',marginLeft: 4});
+	$('#cAudit').click(function(){
     $(this).fadeOut();
   })
   .css({position: 'fixed', top: 0, left: 0, width: '100%', height: '100%', backgroundColor: 'rgba(0,0,0,.75)', zIndex: '999'});
