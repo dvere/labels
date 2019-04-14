@@ -23,22 +23,27 @@ function showEvents(t){
       'id': 'audit-container'
     })
     .css({
-      display: 'flex',
-      marginLeft: 20,
+      margin: 20,
       width: 400
     });
   
   $.getJSON(u,function(json){
     $.each(json, function(i, obj) {
+      var ar = $('<div>',{class: 'event'})
+        .css({
+          display: 'grid',
+          gridTemplateColumns: '150px 50px 100px 100px'
+        });
       obj.service_centre = obj.service_centre || {code: 'NA'};
       obj.user = obj.user || {username: 'NA'};
-      $('<div>', {'class': 'audit', 'text': obj.timestamp}).appendTo(cd);
-      $('<div>', {'class': 'audit', 'text': obj.service_centre.code}).appendTo(cd);
-      $('<div>', {'class': 'audit', 'text': obj.tracking_code.code}).appendTo(cd);
-      $('<div>', {'class': 'audit', 'text': obj.user.username}).appendTo(cd);
+      $('<div>', {'class': 'audit', 'text': obj.timestamp}).appendTo(ar);
+      $('<div>', {'class': 'audit', 'text': obj.service_centre.code}).appendTo(ar);
+      $('<div>', {'class': 'audit', 'text': obj.tracking_code.code}).appendTo(ar);
+      $('<div>', {'class': 'audit', 'text': obj.user.username}).appendTo(ar);
+      ar.appendTo(cd);
     });
     $('#cTarget').append(cd);
-    $('.audit').css({flex: '1 25%'});
+  //  $('.audit').css({flex: '1 25%'});
     $('#cTarget').show();
   }).fail(function(){
     console.log('Events Request Failed');
