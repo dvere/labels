@@ -96,6 +96,7 @@ function formatCons(json){
 }
 
 function addPartsToDOM(){
+  $('div.ed').remove();
   var ed = $('<div>',{'class':'ed'})
     .append($('<input>', {'class':'cDate', 'type':'date'}))
     .append($('<button>', {'id': 'goButton', 'text': 'Lookup Collections', 'onclick': 'getCollectedCons()'}))
