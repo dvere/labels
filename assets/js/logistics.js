@@ -33,7 +33,7 @@ function showEvents(t){
         });
 
   $.each(['Timestamp', 'SC','Event','User'], function(){
-    $('<div>',{text: this}).appendTo(cHeader);
+    $('<div>',{text: $(this)}).appendTo(cHeader);
   });
   
   $('#cTarget').empty();
@@ -43,7 +43,7 @@ function showEvents(t){
         .css({
           display: 'grid',
           gridTemplateColumns: '140px 40px 180px 140px',
-          border: '0 1px 1px solid rgba(0,0,0,.4)'
+          border: '1px none solid solid solid rgba(0,0,0,.7)'
         });
       obj.service_centre = obj.service_centre || {code: 'NA'};
       obj.user = obj.user || {username: 'NA'};
