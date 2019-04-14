@@ -62,7 +62,8 @@ function getCollectedCons() {
     $.each(json, function(i, obj) {
       if(obj.status != 'DELIVERED') {
         var cConsignment = $('<div>', {class: 'consignment'});
-        $('<div>', {'class': 'consignment-item', 'text': obj.tracking_number, 'onclick': 'showEvents(' + obj.id + ')', 'id': obj.id}).appendTo(cConsignment);
+        $('<div>', {'class': 'consignment-item', 'text': obj.tracking_number, 'onclick': 'showEvents(' + obj.id + ')', 'id': obj.id})
+          .appendTo(cConsignment);
         $('<div>', {'class': 'consignment-item', 'text': obj.package_type}).appendTo(cConsignment);
         $('<div>', {'class': 'consignment-item', 'text': obj.requested_route}).appendTo(cConsignment);
         $('<div>', {'class': 'consignment-item', 'text': obj.consolidation_id}).appendTo(cConsignment);
