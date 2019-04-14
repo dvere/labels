@@ -78,7 +78,7 @@ function getCollectedCons() {
 }
 
 function addPartsToDOM(){
-  $('<link>', {rel: 'stylesheet;', href: 'https://dvere.github.io/labels/assets/css/logitics.css?v='+ $.now()})
+  $('<link>', {rel: 'stylesheet', href: 'https://dvere.github.io/labels/assets/css/logitics.css?v='+ $.now()})
     .appendTo($('head'));
   $('#cInsert').remove();
   var cInsert = $('<div>',{'id':'cInsert'})
