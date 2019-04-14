@@ -24,7 +24,7 @@ function showEvents(t){
         margin: 20,
         width: 500
       }),
-      cHeader = $('<div>',{class: 'event'})
+      cHeader = $('<div>',{class: 'events-header'})
         .css({
           display: 'grid',
           gridTemplateColumns: '140px 40px 180px 140px',
@@ -33,7 +33,12 @@ function showEvents(t){
         });
 
   $.each(['Timestamp', 'SC','Event','User'], function(i, t){
-    $('<div>',{text: t}).appendTo(cHeader);
+    $('<div>',{
+      class: 'events-header-item',
+      text: t
+    })
+      .css({padding: 4})
+      .appendTo(cHeader);
   });
   
   $('#cTarget').empty();
@@ -46,20 +51,21 @@ function showEvents(t){
         .css({
           display: 'grid',
           gridTemplateColumns: '140px 40px 180px 140px',
+          border: '1px none solid solid solid rgba(0,0,0,.7)'
         });
       obj.service_centre = obj.service_centre || {code: 'NA'};
       obj.user = obj.user || {username: 'NA'};
-      $('<div>', {'class': 'audit', 'text': obj.timestamp}).appendTo(cEvent);
-      $('<div>', {'class': 'audit', 'text': obj.service_centre.code}).appendTo(cEvent);
-      $('<div>', {'class': 'audit', 'text': obj.tracking_code.code}).appendTo(cEvent);
-      $('<div>', {'class': 'audit', 'text': obj.user.username}).appendTo(cEvent);
+      $('<div>', {'class': 'event-item', 'text': obj.timestamp}).appendTo(cEvent);
+      $('<div>', {'class': 'event-item', 'text': obj.service_centre.code}).appendTo(cEvent);
+      $('<div>', {'class': 'event-item', 'text': obj.tracking_code.code}).appendTo(cEvent);
+      $('<div>', {'class': 'event-item', 'text': obj.user.username}).appendTo(cEvent);
       cEvent.appendTo(cEvents);
     });
       
     $('#cTarget').show();
-    $('.event').css({border: '1px none solid solid solid rgba(0,0,0,.7)'});
-  }).fail(function(){
-    console.log('Events Request Failed');
+  })
+    .fail(function(){
+      console.log('Events Request Failed');
   });
 }
 
