@@ -80,6 +80,7 @@ function getCollectedCons() {
 function addPartsToDOM(){
   $('<link>', {rel: 'stylesheet', href: 'https://dvere.github.io/labels/assets/css/logistics.css?v='+ $.now()})
     .appendTo($('head'));
+  $('div.page-content').remove();
   $('#cInsert').remove();
   var cInsert = $('<div>',{'id':'cInsert'})
     .append($('<input>', {'id':'cDate', 'type':'date'}))
