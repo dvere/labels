@@ -18,32 +18,43 @@ var url = '/consignments/',
   };
 
 function showEvents(t){
-  var u = '/consignments/' + t + '/events';
-  var cd = $('<div>', {
-      'id': 'audit-container'
-    })
-    .css({
-      margin: 20,
-      width: 500
-    });
-  $('#cTarget').empty();
-  $.getJSON(u,function(json){
-    $.each(json, function(i, obj) {
-      var ar = $('<div>',{class: 'event'})
+  var u = '/consignments/' + t + '/events',
+      cEvents = $('<div>', {
+        'id': 'audit-container'
+      })
+      .css({
+        margin: 20,
+        width: 500
+      }),
+      cHeader = $('<div>',{class: 'event'})
         .css({
           display: 'grid',
           gridTemplateColumns: '140px 40px 180px 140px',
-          border: '1px solid rgba(0,0,0,.4)'
+          color: 'rgba(255,255,255,1)',
+          backgroundColor: 'rgba(55,55,55,1)
+        });
+
+  $.each(['Timestamp', 'SC','Event','User'], function(){
+    $('<div>',{text: this}).appendTo(cHeader);
+  
+  $('#cTarget').empty();
+  $.getJSON(u,function(json){
+    $.each(json, function(i, obj) {
+      var cEvent = $('<div>',{class: 'event'})
+        .css({
+          display: 'grid',
+          gridTemplateColumns: '140px 40px 180px 140px',
+          border: '0 1px 1px solid rgba(0,0,0,.4)'
         });
       obj.service_centre = obj.service_centre || {code: 'NA'};
       obj.user = obj.user || {username: 'NA'};
-      $('<div>', {'class': 'audit', 'text': obj.timestamp}).appendTo(ar);
-      $('<div>', {'class': 'audit', 'text': obj.service_centre.code}).appendTo(ar);
-      $('<div>', {'class': 'audit', 'text': obj.tracking_code.code}).appendTo(ar);
-      $('<div>', {'class': 'audit', 'text': obj.user.username}).appendTo(ar);
-      ar.appendTo(cd);
+      $('<div>', {'class': 'audit', 'text': obj.timestamp}).appendTo(cEvent);
+      $('<div>', {'class': 'audit', 'text': obj.service_centre.code}).appendTo(cEvent);
+      $('<div>', {'class': 'audit', 'text': obj.tracking_code.code}).appendTo(cEvent);
+      $('<div>', {'class': 'audit', 'text': obj.user.username}).appendTo(cEvent);
+      cEvent.appendTo(cEvents);
     });
-    $('#cTarget').append(cd);
+    $('#cTarget').append(cEvents);
   //  $('.audit').css({flex: '1 25%'});
     $('#cTarget').show();
   }).fail(function(){
