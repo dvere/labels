@@ -1,4 +1,4 @@
-var url = '/consignments/',
+uvar url = '/consignments/',
   fields = [
     'tracking_number',
     'requested_route',
@@ -115,7 +115,7 @@ function addPartsToDOM(){
 	$('.cDate').css({lineHeight: '1.2em', marginLeft: 20});
 	$('#goButton').css({lineHeight: '1.3em',marginLeft: 4});
 	$('#cTarget').click(function(){
-    $(this).slideUp();
+    $(this).fadeOut();
   })
   .css({position: 'fixed', top: 0, left: 0, width: '100%', height: '100%', backgroundColor: 'rgba(0,0,0,.75)', zIndex: '999'});
 };
