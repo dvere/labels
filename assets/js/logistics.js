@@ -61,7 +61,7 @@ function showEvents(t){
       $('<div>', {'class': 'event-item', 'text': obj.user.username}).appendTo(cEvent);
       cEvent.appendTo(cEvents);
     });
-      
+    $('.event').css({padding: 4, border: '1px solid rgba(0,0,0,1)', borderTopStyle: 'none'});
     $('#cTarget').show();
   })
     .fail(function(){
@@ -101,7 +101,7 @@ function formatCons(json){
       $('#cons').append(tr);
     }
   });
-  $('.results-data').css({padding: '0 6px', border: '1px solid rgba(0,0,0)'});
+  $('.results-data').css({padding: 4, border: '1px solid rgba(0,0,0,1)', borderTopStyle: 'none'});
 }
 
 function addPartsToDOM(){
