@@ -1,4 +1,4 @@
-uvar url = '/consignments/',
+var url = '/consignments/',
   fields = [
     'tracking_number',
     'requested_route',
