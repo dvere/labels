@@ -32,8 +32,8 @@ function showEvents(t){
           backgroundColor: 'rgba(55,55,55,1)'
         });
 
-  $.each(['Timestamp', 'SC','Event','User'], function(){
-    $('<div>',{text: $(this)}).appendTo(cHeader);
+  $.each(['Timestamp', 'SC','Event','User'], function(i, t){
+    $('<div>',{text: t}).appendTo(cHeader);
   });
   
   $('#cTarget').empty();
