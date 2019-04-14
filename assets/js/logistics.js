@@ -21,8 +21,11 @@ function showEvents(t){
         'id': 'cEvents'
       })
       .css({
-        margin: 20,
-        width: 500
+        margin: '140px auto',
+        width: 580,
+        padding: 40,
+        backgroundColor: 'white',
+        zIndex: '999'
       }),
       cHeader = $('<div>',{class: 'events-header'})
         .css({
@@ -62,7 +65,7 @@ function showEvents(t){
     });
     $('.event').css({border: '1px solid rgba(0,0,0,.7)', borderTopStyle: 'none', backgroundColor: 'white'});
     $('.event-item').css({padding: 4});
-    $('#cTarget').show();
+    $('#cTarget').fadeIn();
   })
     .fail(function(){
       console.log('Events Request Failed');
