@@ -60,7 +60,7 @@ function showEvents(t){
       $('<div>', {'class': 'event-item', 'text': obj.user.username}).appendTo(cEvent);
       cEvent.appendTo(cEvents);
     });
-    $('.event').css({border: '1px solid rgba(0,0,0,.7)', borderTopStyle: 'none'});
+    $('.event').css({border: '1px solid rgba(0,0,0,.7)', borderTopStyle: 'none', backgroundColor: 'white'});
     $('.event-item').css({padding: 4});
     $('#cTarget').show();
   })
@@ -101,7 +101,7 @@ function formatCons(json){
       $('#cons').append(tr);
     }
   });
-  $('.results-data').css({padding: 4, border: '1px solid rgba(0,0,0,1)', borderTopStyle: 'none', backgroundColor: 'white'});
+  $('.results-data').css({padding: 4, border: '1px solid rgba(0,0,0,1)', borderTopStyle: 'none'});
 }
 
 function addPartsToDOM(){
@@ -117,7 +117,7 @@ function addPartsToDOM(){
 	$('#cTarget').click(function(){
     $(this).slideUp();
   })
-  .css({position: 'fixed', top: 0, left: 0, width: '100%', height: '100%', backgroundColor: 'rgba(0,0,0,.75)'});
+  .css({position: 'fixed', top: 0, left: 0, width: '100%', height: '100%', backgroundColor: 'rgba(0,0,0,.75)', zIndex: '999'});
 };
 
 $.when($.ready).then(function() {
