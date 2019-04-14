@@ -36,6 +36,7 @@ function showEvents(t){
 
   $.each(['Timestamp', 'SC','Event','User'], function(){
     $('<div>',{text: this}).appendTo(cHeader);
+  });
   
   $('#cTarget').empty();
   $.getJSON(u,function(json){
