@@ -127,14 +127,14 @@ function addPartsToDOM(){
     .append($('<input>', {'id':'cDate', 'type':'date'}))
     .append($('<button>', {'id': 'cButton', 'text': 'Lookup Collections', 'onclick': 'getCollectedCons()'}))
     .append($('<div>', {'id': 'cConsignments'}).css({width: 580, margin: '0 auto'}))
-    .append($('<div>', {'id':'cAudits', 'style':'display:none'}));
+    .append($('<div>', {'id':'cAudits'}));
   $('#breadcrumbs').after(cInsert);
 	$('#cDate').css({lineHeight: '1.2em', marginLeft: 20});
 	$('#cButton').css({lineHeight: '1.3em',marginLeft: 4});
 	$('#cAudit').click(function(){
     $(this).fadeOut();
   })
-  .css({position: 'fixed', top: 0, left: 0, width: '100%', height: '100%', backgroundColor: 'rgba(0,0,0,.75)', zIndex: '999'});
+  .css({display: 'none', position: 'fixed', top: 0, left: 0, width: '100%', height: '100%', backgroundColor: 'rgba(0,0,0,.75)', zIndex: '999'});
 };
 
 $.when($.ready).then(function() {
