@@ -35,6 +35,7 @@ function showEvents(t){
   $.each(['Timestamp', 'SC','Event','User'], function(){
     $('<div>',{text: $(this)}).appendTo(cHeader);
   });
+  cHeader.appendTo(cEvents);
   
   $('#cTarget').empty();
   $.getJSON(u,function(json){
@@ -43,7 +44,6 @@ function showEvents(t){
         .css({
           display: 'grid',
           gridTemplateColumns: '140px 40px 180px 140px',
-          border: '1px none solid solid solid rgba(0,0,0,.7)'
         });
       obj.service_centre = obj.service_centre || {code: 'NA'};
       obj.user = obj.user || {username: 'NA'};
@@ -55,6 +55,7 @@ function showEvents(t){
     });
     $('#cTarget').append(cEvents);
     $('#cTarget').show();
+    $('.event').css({border: '1px none solid solid solid rgba(0,0,0,.7)'});
   }).fail(function(){
     console.log('Events Request Failed');
   });
