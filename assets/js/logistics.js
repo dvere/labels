@@ -18,7 +18,7 @@ var url = '/consignments/',
 function showEvents(t){
   var u = '/consignments/' + t + '/events',
       cEvents = $('<div>', {
-        'id': 'audit-container'
+        'id': 'cEvents'
       })
       .css({
         margin: 20,
@@ -35,9 +35,11 @@ function showEvents(t){
   $.each(['Timestamp', 'SC','Event','User'], function(){
     $('<div>',{text: $(this)}).appendTo(cHeader);
   });
-  cHeader.appendTo(cEvents);
   
   $('#cTarget').empty();
+  $('#cTarget').append(cEvents);
+  $('#cEvents').append(cHeader);
+  
   $.getJSON(u,function(json){
     $.each(json, function(i, obj) {
       var cEvent = $('<div>',{class: 'event'})
@@ -53,7 +55,7 @@ function showEvents(t){
       $('<div>', {'class': 'audit', 'text': obj.user.username}).appendTo(cEvent);
       cEvent.appendTo(cEvents);
     });
-    $('#cTarget').append(cEvents);
+      
     $('#cTarget').show();
     $('.event').css({border: '1px none solid solid solid rgba(0,0,0,.7)'});
   }).fail(function(){
