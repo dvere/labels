@@ -104,16 +104,17 @@ function formatCons(json){
 }
 
 function addPartsToDOM(){
-  $('<div>',{'class':'ed'}).insertBefore('#nav-search')
+  var ed = $('<div>',{'class':'ed'})
     .append($('<input>', {'class':'cDate', 'type':'date'}))
-	.append($('<button>', {'id': 'goButton', 'text': 'Lookup Collections', 'onclick': 'getCollectedCons()'}))
+    .append($('<button>', {'id': 'goButton', 'text': 'Lookup Collections', 'onclick': 'getCollectedCons()'}))
     .append($('<div>', {'class':'modal', 'id':'cTarget', 'style':'display:none'}))
-	.append($('<table>', {'id': 'cons'}).css({marginLeft: 20}));
+    .append($('<table>', {'id': 'cons'}).css({marginLeft: 20}));
+  $('#breadcrumbs').after(ed);
 	$('.cDate').css({lineHeight: '1.2em', marginLeft: 20});
 	$('#goButton').css({lineHeight: '1.3em',marginLeft: 4});
 	$('#cTarget').click(function(){
       $(this).slideUp();
-    });
+  });
 };
 
 $.when($.ready).then(function() {
