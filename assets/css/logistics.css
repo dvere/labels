@@ -1,8 +1,9 @@
 #cEvents {
-  border-radius: 6px;
-  margin: 140px auto;
-  width: 580px;
-  height: 400px;
+  position: absolute;
+  float: left;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
   padding: 40px;
   background-color: white;
   zIndex: 999;
