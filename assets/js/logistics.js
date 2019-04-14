@@ -19,7 +19,14 @@ var url = '/consignments/',
 
 function showEvents(t){
   var u = '/consignments/' + t + '/events';
-  var cd = $('<div>', {'id': 'audit-container'});
+  var cd = $('<div>', {
+      'id': 'audit-container'
+    })
+    .css({
+      display: 'flex',
+      marginLeft: 20,
+      width: 400
+    });
   
   $.getJSON(u,function(json){
     $.each(json, function(i, obj) {
@@ -31,6 +38,7 @@ function showEvents(t){
       $('<div>', {'class': 'audit', 'text': obj.user.username}).appendTo(cd);
     });
     $('#cTarget').append(cd);
+    $('.audit').css({flex: '1 25%'});
     $('#cTarget').show();
   }).fail(function(){
     console.log('Events Request Failed');
