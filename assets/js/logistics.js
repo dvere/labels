@@ -24,7 +24,7 @@ function showEvents(t){
     })
     .css({
       margin: 20,
-      width: 400
+      width: 500
     });
   
   $.getJSON(u,function(json){
@@ -32,7 +32,7 @@ function showEvents(t){
       var ar = $('<div>',{class: 'event'})
         .css({
           display: 'grid',
-          gridTemplateColumns: '150px 50px 100px 100px'
+          gridTemplateColumns: '140px 40px 180px 140px'
         });
       obj.service_centre = obj.service_centre || {code: 'NA'};
       obj.user = obj.user || {username: 'NA'};
