@@ -26,13 +26,14 @@ function showEvents(t){
       margin: 20,
       width: 500
     });
-  
+  $('#cTarget').empty();
   $.getJSON(u,function(json){
     $.each(json, function(i, obj) {
       var ar = $('<div>',{class: 'event'})
         .css({
           display: 'grid',
-          gridTemplateColumns: '140px 40px 180px 140px'
+          gridTemplateColumns: '140px 40px 180px 140px',
+          border: '1px solid rgba(0,0,0,.4)'
         });
       obj.service_centre = obj.service_centre || {code: 'NA'};
       obj.user = obj.user || {username: 'NA'};
