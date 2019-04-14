@@ -113,7 +113,7 @@ function addPartsToDOM(){
 	$('.cDate').css({lineHeight: '1.2em', marginLeft: 20});
 	$('#goButton').css({lineHeight: '1.3em',marginLeft: 4});
 	$('#cTarget').click(function(){
-      $(this).slideUp();
+    $(this).slideUp();
   });
 };
 
