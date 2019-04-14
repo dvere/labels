@@ -101,7 +101,7 @@ function formatCons(json){
       $('#cons').append(tr);
     }
   });
-  $('.results-data').css({padding: 4, border: '1px solid rgba(0,0,0,1)', borderTopStyle: 'none'});
+  $('.results-data').css({padding: 4, border: '1px solid rgba(0,0,0,1)', borderTopStyle: 'none', backgroundColor: 'white'});
 }
 
 function addPartsToDOM(){
@@ -117,7 +117,7 @@ function addPartsToDOM(){
 	$('#cTarget').click(function(){
     $(this).slideUp();
   })
-  .css({position: 'fixed', top: 0, left: 0, width: '100%', height: '100%', backgroundColor: 'rgba(0,0,0,.85)'});
+  .css({position: 'fixed', top: 0, left: 0, width: '100%', height: '100%', backgroundColor: 'rgba(0,0,0,.75)'});
 };
 
 $.when($.ready).then(function() {
