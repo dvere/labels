@@ -50,8 +50,7 @@ function showEvents(t){
       var cEvent = $('<div>',{class: 'event'})
         .css({
           display: 'grid',
-          gridTemplateColumns: '140px 40px 180px 140px',
-          border: '1px none solid solid solid rgba(0,0,0,.7)'
+          gridTemplateColumns: '140px 40px 180px 140px'
         });
       obj.service_centre = obj.service_centre || {code: 'NA'};
       obj.user = obj.user || {username: 'NA'};
@@ -61,7 +60,8 @@ function showEvents(t){
       $('<div>', {'class': 'event-item', 'text': obj.user.username}).appendTo(cEvent);
       cEvent.appendTo(cEvents);
     });
-    $('.event').css({padding: 4, border: '1px solid rgba(0,0,0,1)', borderTopStyle: 'none'});
+    $('.event').css({border: '1px solid rgba(0,0,0,.7)', borderTopStyle: 'none'});
+    $('.event-item').css({padding: 4});
     $('#cTarget').show();
   })
     .fail(function(){
