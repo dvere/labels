@@ -6,8 +6,6 @@ var url = '/consignments/',
     'delivery_address_type',
     'package_type',
     'status',
-//    'audit.description',
-//    'audit.service_centre_code',
     'package_type'
   ],
   data = {
@@ -56,7 +54,6 @@ function showEvents(t){
       cEvent.appendTo(cEvents);
     });
     $('#cTarget').append(cEvents);
-  //  $('.audit').css({flex: '1 25%'});
     $('#cTarget').show();
   }).fail(function(){
     console.log('Events Request Failed');
@@ -88,37 +85,10 @@ function formatCons(json){
         'id': obj.id
       }).appendTo(tr);
 
-      $('<td>', {
-        'class': 'results-data',
-        'text': obj.package_type
-      }).appendTo(tr);
-
-      $('<td>', {
-        'class': 'results-data',
-        'text': obj.requested_route
-      }).appendTo(tr);
-
-      $('<td>', {
-        'class': 'results-data',
-        'text': obj.consolidation_id
-      }).appendTo(tr);
-
-      $('<td>', {
-        'class': 'results-data',
-        'text': obj.status
-      }).appendTo(tr);
-/*
-      $('<td>',{
-        'class': 'results-data',
-        'text': obj.consignment_events[0].service_centre_code,
-        'title': obj.consignment_events[0].description
-      }).appendTo(tr);
-
-      $('<td>',{
-        'class': 'results-data',
-        'text': obj.consignment_events[0].description
-      }).appendTo(tr);
-*/
+      $('<td>', {'class': 'results-data', 'text': obj.package_type}).appendTo(tr);
+      $('<td>', {'class': 'results-data', 'text': obj.requested_route}).appendTo(tr);
+      $('<td>', {'class': 'results-data', 'text': obj.consolidation_id}).appendTo(tr);
+      $('<td>', {'class': 'results-data', 'text': obj.status}).appendTo(tr);
       $('#cons').append(tr);
     }
   });
