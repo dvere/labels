@@ -114,7 +114,7 @@ function getCollectedCons() {
         $('#cConsignments').append(cConsignment);
       };
     });
-    $('.consignment-item').css({padding: 4, border: '1px solid rgba(0,0,0,1)', borderTopStyle: 'none'});
+    $('.consignment-item').css({padding: 4});
   })
     .fail(function(){
       console.log('Consignments Request Failed');
