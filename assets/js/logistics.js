@@ -113,3 +113,7 @@ function addPartsToDOM(){
       $(this).slideUp();
     });
 };
+
+$.when($.ready).then(function() {
+	addPartsToDOM();
+}
