@@ -28,8 +28,8 @@ function showEvents(t){
 }
 
 function formatEvents(json){
+  var cd = $('<div>', {'id': 'audit-container'});
   $.each(json, function(i, obj) {
-    var cd = $('<div>', {'id': 'audit-container'});
     obj.service_centre = obj.service_centre || {code: 'NA'};
     obj.user = obj.user || {username: 'NA'};
     $('<div>', {'class': 'audit', 'text': obj.timestamp}).appendTo(cd);
