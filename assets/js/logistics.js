@@ -31,6 +31,7 @@ function formatEvents(json){
   $.each(json, function(i, obj) {
     var cd = $('<div>', {'id': 'audit-container'});
     obj.service_centre = obj.service_centre || {code: 'NA'};
+    obj.user = obj.user || {username: 'NA'};
     $('<div>', {'class': 'audit', 'text': obj.timestamp}).appendTo(cd);
     $('<div>', {'class': 'audit', 'text': obj.service_centre.code}).appendTo(cd);
     $('<div>', {'class': 'audit', 'text': obj.tracking_code.code}).appendTo(cd);
