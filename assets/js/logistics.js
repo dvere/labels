@@ -95,7 +95,7 @@ function getCollectedCons() {
   $('#cConsignments').empty();
   $('#cConsignments').append(cHeader);
 
-  data.received_at = $('.cDate').val();
+  data.received_at = $('#cDate').val();
 
   $.getJSON(url, data, function(json){
     $.each(json, function(i, obj) {
