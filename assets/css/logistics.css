@@ -24,7 +24,7 @@
 .events-header-item, .event-item, .consignments-header-item, .consignment-item {
   padding: 4px;
 }
-.event-item:first-of-type:hover {
+.consignment-item:first-of-type:hover {
   cursor: pointer;
 }
 .event, .events-header {
