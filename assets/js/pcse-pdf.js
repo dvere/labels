@@ -85,6 +85,7 @@ function doLabels(items) {
       return response.blob();
     }).then(function(myBlob){
       window.location =  URL.createObjectURL(myBlob);
+      window.print();
     });
 //    window.print();
 //    $('#output').remove();
