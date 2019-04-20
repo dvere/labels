@@ -61,20 +61,17 @@ function doLabels(items) {
             '^FN8^FDPieces: ' + i + ' of ' + qty + '^FS' + le;
     }
     var zpl = fmt + tt;
+    
     // write, print and destroy ZPL content
     $('body').css({'visibility': 'hidden'});
-    $('<div>', {id: 'output'}).appendTo($('body'));
-
-    $('#output').css({
-        'visibility': 'visible',
-        'display': 'block',
-        'position': 'absolute',
-        'top': 0,
-        'left': 0,
-        'right': 0,
-        'z-index': 9999
-    }).html('<object type="application/pdf" data="' + newPdfUrl(zpl) + '"></object>');
-
+    $('<div>', {id: 'output'})
+    .css({
+      'visibility': 'visible',
+      'z-index': 9999
+    })
+    .appendTo($('body'));
+  
+    newPdf(zpl);
     //window.print();
 
 //    $('#output').remove();
@@ -82,7 +79,7 @@ function doLabels(items) {
 
 }
 
-function newPdfUrl(zpl){
+function newPdf(zpl){
   var fd = new FormData();
 
   fd.append('file',zpl);
@@ -103,8 +100,9 @@ function newPdfUrl(zpl){
   fetch(myRequest).then(function(response){
 	return response.blob();
   }).then(function(myBlob){
-	var objectURL = URL.createObjectURL(myBlob);
-	return objectURL;
+   	var objectURL = URL.createObjectURL(myBlob);
+	  $('<embed>', {type: 'application/pdf', data: objectURL})
+    .appendTo($('#output'));
   });
 };
 
