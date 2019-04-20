@@ -81,7 +81,7 @@ function doLabels(items) {
       return response.blob();
     }).then(function(myBlob){
       window.location =  URL.createObjectURL(myBlob);
-    }).then(window.print());
+    });
 }
 
 $.when($.ready).then(function() {
