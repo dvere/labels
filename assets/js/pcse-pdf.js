@@ -82,7 +82,7 @@ function doLabels(items) {
             'background-color': 'white'
     });
 
-    window.print();
+    //window.print();
 
     $('#output').remove();
     $('body').removeAttr('style');
