@@ -81,13 +81,8 @@ function doLabels(items) {
       return response.blob();
     }).then(function(myBlob){
       window.location =  URL.createObjectURL(myBlob);
-      window.print();
-    });
+    }).then(window.print());
 }
-
-function newPdf(zpl){
-
-};
 
 $.when($.ready).then(function() {
     var tab;
