@@ -84,16 +84,7 @@ function doLabels(items) {
     fetch(myRequest).then(function(response){
       return response.blob();
     }).then(function(myBlob){
- 	    var objectURL = URL.createObjectURL(myBlob);
-      $('<div>', {id: 'output'})
-      .css({
-        'visibility': 'visible',
-        'z-index': 9999
-      })
-      .appendTo($('body'));
-      $('<embed>', {type: 'application/pdf', data: objectURL})
-      .appendTo($('#output'));
-      $('body').css({'visibility': 'hidden'});
+      window.location =  URL.createObjectURL(myBlob);
     });
 //    window.print();
 //    $('#output').remove();
