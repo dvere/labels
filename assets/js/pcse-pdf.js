@@ -60,15 +60,12 @@ function doLabels(items) {
         tt += ls + lm + '\n' +
             '^FN8^FDPieces: ' + i + ' of ' + qty + '^FS' + le;
     }
-    var zpl = fmt + tt;
-    
-    // write, print and destroy ZPL content
-
-  
+    var zpl = fmt + tt;  
     var fd = new FormData();
-    fd.append('file',zpl);
-
     var myHeaders = new Headers();
+    var url = 'https://lab1.dvere.org/l/';
+
+    fd.append('file',zpl);
     myHeaders.accept = 'application/pdf';
 
     var myInit = { method: 'POST',
@@ -77,8 +74,7 @@ function doLabels(items) {
                    body: fd,
                    credentials: 'omit' };
 
-    var url = 'https://lab1.dvere.org/l/';
-
+  
     var myRequest = new Request(url, myInit);
 
     fetch(myRequest).then(function(response){
@@ -87,9 +83,6 @@ function doLabels(items) {
       window.location =  URL.createObjectURL(myBlob);
       window.print();
     });
-//    window.print();
-//    $('#output').remove();
-//    $('body').removeAttr('style');
 }
 
 function newPdf(zpl){
