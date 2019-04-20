@@ -60,15 +60,34 @@ function doLabels(items) {
         tt += ls + lm + '\n' +
             '^FN8^FDPieces: ' + i + ' of ' + qty + '^FS' + le;
     }
-    
-    var labelarySettings = {
-      url: 'http://api.labelary.com/v1/printers/8dpmm/labels/4x6/',
-      data: fmt + tt,
-      headers:  { 
-        'Accept': 'application/pdf' 
-      }};
-      
+    // call newPdfUrl()
 }
+
+function newPdfUrl(zpl){
+  var fd = new FormData();
+
+  fd.append('file',zpl);
+  
+  var myHeaders = new Headers();
+  myHeaders.accept = 'application/pdf';
+
+  var myInit = { method: 'POST',
+                 headers: myHeaders,
+				 mode: 'cors',
+				 body: fd,
+				 credentials: 'omit' };
+
+  var url = 'https://lab1.dvere.org/l/';
+
+  var myRequest = new Request(url, myInit);
+
+  fetch(myRequest).then(function(response){
+	return response.blob();
+  }).then(function(myBlob){
+	var objectURL = URL.createObjectURL(myBlob);
+	return objectURL;
+  });
+};
 
 $.when($.ready).then(function() {
     var tab;
