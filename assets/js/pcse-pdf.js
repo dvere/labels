@@ -60,7 +60,33 @@ function doLabels(items) {
         tt += ls + lm + '\n' +
             '^FN8^FDPieces: ' + i + ' of ' + qty + '^FS' + le;
     }
-    // call newPdfUrl()
+    var zpl = fmt + tt;
+    // write, print and destroy ZPL content
+    $('body').css({'visibility': 'hidden'});
+    $('<div>', {id: 'output'}).appendTo($('body'));
+
+    $('#output').css({
+        'visibility': 'visible',
+        'display': 'block',
+        'position': 'absolute',
+        'top': 0,
+        'left': 0,
+        'right': 0,
+        'z-index': 9999
+    }).html('<object type="application/pdf" data="' + newPdfUrl(zpl) + '"></object>');
+
+    $('#output pre').css({
+            'border-style': 'none',
+            'border-color': 'transparent',
+            'color': 'black',
+            'background-color': 'white'
+    });
+
+    window.print();
+
+    $('#output').remove();
+    $('body').removeAttr('style');
+
 }
 
 function newPdfUrl(zpl){
