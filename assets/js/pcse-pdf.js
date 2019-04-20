@@ -63,13 +63,7 @@ function doLabels(items) {
     var zpl = fmt + tt;
     
     // write, print and destroy ZPL content
-    $('body').css({'visibility': 'hidden'});
-    $('<div>', {id: 'output'})
-    .css({
-      'visibility': 'visible',
-      'z-index': 9999
-    })
-    .appendTo($('body'));
+
   
     var fd = new FormData();
     fd.append('file',zpl);
@@ -91,9 +85,15 @@ function doLabels(items) {
       return response.blob();
     }).then(function(myBlob){
  	    var objectURL = URL.createObjectURL(myBlob);
+      $('<div>', {id: 'output'})
+      .css({
+        'visibility': 'visible',
+        'z-index': 9999
+      })
+      .appendTo($('body'));
       $('<embed>', {type: 'application/pdf', data: objectURL})
-      .appendTo($('#output'))
-      .css({'visibility': 'visible'});
+      .appendTo($('#output'));
+      $('body').css({'visibility': 'hidden'});
     });
 //    window.print();
 //    $('#output').remove();
