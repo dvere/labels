@@ -75,13 +75,6 @@ function doLabels(items) {
         'z-index': 9999
     }).html('<object type="application/pdf" data="' + newPdfUrl(zpl) + '"></object>');
 
-    $('#output pre').css({
-            'border-style': 'none',
-            'border-color': 'transparent',
-            'color': 'black',
-            'background-color': 'white'
-    });
-
     //window.print();
 
     $('#output').remove();
