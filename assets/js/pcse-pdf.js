@@ -71,39 +71,36 @@ function doLabels(items) {
     })
     .appendTo($('body'));
   
-    newPdf(zpl);
-    //window.print();
+    var fd = new FormData();
+    fd.append('file',zpl);
 
+    var myHeaders = new Headers();
+    myHeaders.accept = 'application/pdf';
+
+    var myInit = { method: 'POST',
+                   headers: myHeaders,
+                   mode: 'cors',
+                   body: fd,
+                   credentials: 'omit' };
+
+    var url = 'https://lab1.dvere.org/l/';
+
+    var myRequest = new Request(url, myInit);
+
+    fetch(myRequest).then(function(response){
+      return response.blob();
+    }).then(function(myBlob){
+ 	    var objectURL = URL.createObjectURL(myBlob);
+      $('<embed>', {type: 'application/pdf', data: objectURL})
+      .appendTo($('#output'));
+    });
+//    window.print();
 //    $('#output').remove();
 //    $('body').removeAttr('style');
-
 }
 
 function newPdf(zpl){
-  var fd = new FormData();
 
-  fd.append('file',zpl);
-  
-  var myHeaders = new Headers();
-  myHeaders.accept = 'application/pdf';
-
-  var myInit = { method: 'POST',
-                 headers: myHeaders,
-				 mode: 'cors',
-				 body: fd,
-				 credentials: 'omit' };
-
-  var url = 'https://lab1.dvere.org/l/';
-
-  var myRequest = new Request(url, myInit);
-
-  fetch(myRequest).then(function(response){
-	return response.blob();
-  }).then(function(myBlob){
-   	var objectURL = URL.createObjectURL(myBlob);
-	  $('<embed>', {type: 'application/pdf', data: objectURL})
-    .appendTo($('#output'));
-  });
 };
 
 $.when($.ready).then(function() {
