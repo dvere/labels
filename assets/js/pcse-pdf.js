@@ -92,7 +92,8 @@ function doLabels(items) {
     }).then(function(myBlob){
  	    var objectURL = URL.createObjectURL(myBlob);
       $('<embed>', {type: 'application/pdf', data: objectURL})
-      .appendTo($('#output'));
+      .appendTo($('#output'))
+      .css({'visibility': 'visible'});
     });
 //    window.print();
 //    $('#output').remove();
