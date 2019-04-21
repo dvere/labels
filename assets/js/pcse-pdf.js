@@ -1,33 +1,31 @@
 function getTrackingId(orderId, edDate, items, tab) {
-
-    let pcseData = { tab: tab};
-    if (edDate != 'TBA') { 
-        edDate = edDate.split('/').reverse().join('-');
-        pcseData.DateRangeStart = pcseData.DateRangeEnd = edDate;
-        pcseData.SearchOn = 5; 
-    }
-
-    let pcseInit = {
-        url: '/portal/Logistics/Orders',
-        xhrFields: {
-            withCredentials: true
-        },
-        method: 'GET',
-        dataType: 'html',
-        data: pcseData
-        }
-    $.ajax(pcseInit).done(function(data) {
-        return $(data).text();
-    }).then(function(text) {
-        return $(text).find('tr:contains('+ orderId +')').children().eq(9);
-    }).then(function(td) {
-        items.unshift($(td).html().split('<br>').sort().reverse()[0]);
-        doLabels(items);
-    });
+  let pcseData = { tab: tab};
+  if (edDate != 'TBA') { 
+    edDate = edDate.split('/').reverse().join('-');
+    pcseData.DateRangeStart = pcseData.DateRangeEnd = edDate;
+    pcseData.SearchOn = 5; 
+  }
+  let pcseInit = {
+    url: '/portal/Logistics/Orders',
+    xhrFields: {
+      withCredentials: true
+    },
+    method: 'GET',
+    dataType: 'html',
+    data: pcseData
+  }
+  $.ajax(pcseInit).done(function(data) {
+    return $(data).text();
+  }).then(function(text) {
+    return $(text).find('tr:contains('+ orderId +')').children().eq(9);
+  }).then(function(td) {
+    items.unshift($(td).html().split('<br>').sort().reverse()[0]);
+    doLabels(items);
+  });
 }
 
 function doLabels(items) {
-    var fmt = '^XA^DFR:DELIVERY.GRF^PON\n\
+  var fmt = '^XA^DFR:DELIVERY.GRF^PON\n\
     ^FO5,5^GB780,1200,4^FS\n\
     ^FO5,240^GB780,860,3^FS\n\
     ^FO5,420^GB480,180,3^FS\n\
@@ -47,97 +45,93 @@ function doLabels(items) {
     ^FO150,900^A0N,24^FN6^FS\n\
     ^FO15,1000^A0N,100^FB780,1,0,C^FN8^FS\n\
     ^FO170,1120^BY2^BCN,55,Y^FN7^FS\n^XZ\n\
-';
-    var ls = "^XA\n^XFR:DELIVERY.GRF^FS\n";
-    var le = "\n^XZ";
-    var qty = items.pop();
+  ';
+  var ls = "^XA\n^XFR:DELIVERY.GRF^FS\n";
+  var le = "\n^XZ";
+  var qty = items.pop();
+  items = items.map(function(value, index) {
+    return "^FN" + index + "^FD" + value + "^FS";
+  });
+  var lm = items.join( "\n" ), tt = '';
+  for (var i = qty; i > 0; i--) {
+    tt += ls + lm + '\n' +
+      '^FN8^FDPieces: ' + i + ' of ' + qty + '^FS' + le;
+  }
+  var zpl = fmt + tt;  
+  var fd = new FormData();
+  var myHeaders = new Headers();
+  var url = 'https://lab1.dvere.org/l/';
 
-    items = items.map(function(value, index) {
-        return "^FN" + index + "^FD" + value + "^FS";
-    });
-    var lm = items.join( "\n" ), tt = '';
-    for (var i = qty; i > 0; i--) {
-        tt += ls + lm + '\n' +
-            '^FN8^FDPieces: ' + i + ' of ' + qty + '^FS' + le;
-    }
-    var zpl = fmt + tt;  
-    var fd = new FormData();
-    var myHeaders = new Headers();
-    var url = 'https://lab1.dvere.org/l/';
+  fd.append('file',zpl);
+  myHeaders.accept = 'application/pdf';
 
-    fd.append('file',zpl);
-    myHeaders.accept = 'application/pdf';
+  var myInit = { method: 'POST',
+                 headers: myHeaders,
+                 mode: 'cors',
+                 body: fd,
+                 credentials: 'omit' };
+  var myRequest = new Request(url, myInit);
 
-    var myInit = { method: 'POST',
-                   headers: myHeaders,
-                   mode: 'cors',
-                   body: fd,
-                   credentials: 'omit' };
-
-  
-    var myRequest = new Request(url, myInit);
-
-    fetch(myRequest).then(function(response){
-      return response.blob();
-    }).then(function(myBlob){
-      window.location =  URL.createObjectURL(myBlob);
-    });
+  fetch(myRequest).then(function(response){
+    return response.blob();
+  }).then(function(myBlob){
+    window.location =  URL.createObjectURL(myBlob);
+  });
 }
 
 $.when($.ready).then(function() {
-    var tab;
-    if (window.location.pathname.split('/')[3] != 'Order') return;
-    var status = $('#OrderStatusId').val();
-    if ( status == 141560002 ) {
-        tab = 'ReadyForDespatch';
-    }
-    else if (status == 141560003) {
-        tab = 'Despatched';
-    }
-    else if (status == 100001) {
-        tab = 'Complete';
-    }
-    else {
-        return;
-    }
+  var tab;
+  if (window.location.pathname.split('/')[3] != 'Order') return;
+  var status = $('#OrderStatusId').val();
+  if ( status == 141560002 ) {
+    tab = 'ReadyForDespatch';
+  }
+  else if (status == 141560003) {
+    tab = 'Despatched';
+  }
+  else if (status == 100001) {
+    tab = 'Complete';
+  }
+  else {
+    return;
+  }
+  var qty = prompt("Enter number of packages:", 1);
+  if (qty == null || qty == "" || isNaN(qty)) {
+    console.log("Input quantity error or cancelled by user");
+    return;
+  };
+  var serviceCentres = {
+    BASINGSTOKE: 'BS', BECKTON: 'CV', BIRMINGHAM: 'BP', BRISTOL: 'BL',
+    CAMBRIDGE: 'CB', GATWICK: 'CW', LEEDS: 'LD', LETCHWORTH: 'LE',
+    MANCHESTER: 'MA', MEDWAY: 'ME', MILTON: 'MK', NEWCASTLE: 'NE',
+    NORWICH: 'NR', NOTTINGHAM: 'NG', PLYMOUTH: 'PL', READING: 'NB',
+    SLOUGH: '3S', SOUTHAMPTON: 'SO', SWINDON: 'SW', TELFORD: 'TF',
+    WARWICK: 'MC'
+  };
+  var orderId = $('h3').eq(0).text().trim().split(' ')[2];
+  var svc = $('nav.account-links').find('li').eq(1).text().trim();
+  var svcCode = serviceCentres[svc.substr(0,svc.indexOf(' ')).toUpperCase()];
+  var orderDetail = {};
 
-    var qty = prompt("Enter number of packages:", 1);
-    if (qty == null || qty == "" || isNaN(qty)) {
-        console.log("Input quantity error or cancelled by user");
-        return;
-    };
-    var serviceCentres = {
-        BASINGSTOKE: 'BS', BECKTON: 'CV', BIRMINGHAM: 'BP', BRISTOL: 'BL',
-        CAMBRIDGE: 'CB', GATWICK: 'CW', LEEDS: 'LD', LETCHWORTH: 'LE',
-        MANCHESTER: 'MA', MEDWAY: 'ME', MILTON: 'MK', NEWCASTLE: 'NE',
-        NORWICH: 'NR', NOTTINGHAM: 'NG', PLYMOUTH: 'PL', READING: 'NB',
-        SLOUGH: '3S', SOUTHAMPTON: 'SO', SWINDON: 'SW', TELFORD: 'TF',
-        WARWICK: 'MC'
-    };
-    var orderId = $('h3').eq(0).text().trim().split(' ')[2];
-    var svc = $('nav.account-links').find('li').eq(1).text().trim();
-    var svcCode = serviceCentres[svc.substr(0,svc.indexOf(' ')).toUpperCase()];
-    var orderDetail = {};
+  $('.pcss-order-summary').find('.col-md-5').each(function( i, e ) {
+    var v =  $('.pcss-order-summary').find('.col-md-7').eq(i).text().trim();
+    orderDetail[$(e).text()] = v;
+  });
 
-    $('.pcss-order-summary').find('.col-md-5').each(function( i, e ) {
-        var v =  $('.pcss-order-summary').find('.col-md-7').eq(i).text().trim();
-        orderDetail[$(e).text()] = v;
-    });
+  var edDate = orderDetail['Expected Delivery Date'];
+  var address = orderDetail['Shipping Address'].split(',');
+  var address_1 = address.shift();
+  var postcode = address.pop();
 
-    var edDate = orderDetail['Expected Delivery Date'];
-    var address = orderDetail['Shipping Address'].split(',');
-    var address_1 = address.shift();
-    var postcode = address.pop();
-
-    var items = [
-        orderDetail['Delivery Route And Stop'].substr(0,4),
-        orderDetail['Location Code'],
-        svcCode,
-        address_1,
-        address,
-        postcode,
-        orderId,
-        qty
-    ];
-    getTrackingId(orderId, edDate, items, tab);
+  var items = [
+    orderDetail['Delivery Route And Stop'].substr(0,4),
+    orderDetail['Location Code'],
+    svcCode,
+    address_1,
+    address,
+    postcode,
+    orderId,
+    qty
+  ];
+  getTrackingId(orderId, edDate, items, tab);
 });
