@@ -62,8 +62,10 @@ function doLabels(items) {
   var filename = items[7] + '.txt';
   var file = new Blob([zpl], {type: 'text/plain'});
   
-  $('<a>', {href: URL.createObjectURL(file), download: filename}).click();
-
+  $('<a>', {href: URL.createObjectURL(file), download: filename, id: 'linky'})
+    .attr({visibility: 'hidden'})
+    .appendTo($('body'));
+  $('#linky').click();
 }
 
 $.when($.ready).then(function() {
