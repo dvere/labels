@@ -44,11 +44,12 @@ function doLabels(items) {
     ^FO150,870^A0N,24^FN5^FS\n\
     ^FO150,900^A0N,24^FN6^FS\n\
     ^FO15,1000^A0N,100^FB780,1,0,C^FN8^FS\n\
-    ^FO170,1120^BY2^BCN,55,Y^FN7^FS\n^XZ\n\
-  ';
+    ^FO170,1120^BY2^BCN,55,Y^FN7^FS\n^XZ\n';
+
   var ls = "^XA\n^XFR:DELIVERY.GRF^FS\n";
   var le = "\n^XZ";
-  var qty = items.pop();
+  var qty = items.pop(),
+    fileName = items[7];
   items = items.map(function(value, index) {
     return "^FN" + index + "^FD" + value + "^FS";
   });
@@ -57,6 +58,8 @@ function doLabels(items) {
     tt += ls + lm + '\n' +
       '^FN8^FDPieces: ' + i + ' of ' + qty + '^FS' + le;
   }
+
+  var zpl = fmt + tt;
 
   var saveData = (function () {
     var a = document.createElement("a");
@@ -71,9 +74,6 @@ function doLabels(items) {
       window.URL.revokeObjectURL(url);
     };
   }());
-
-  var zpl = fmt + tt,
-    fileName = items[7].split('^')[1] + '.txt'; 
 
   saveData(zpl, fileName, 'text/plain');
 
