@@ -73,7 +73,7 @@ function doLabels(items) {
   }());
 
   var zpl = fmt + tt,
-    fileName = split('^', items[7])[1] + '.txt'; 
+    fileName = items[7].split('^')[1] + '.txt'; 
 
   saveData(zpl, fileName, 'text/plain');
 
