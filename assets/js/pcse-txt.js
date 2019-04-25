@@ -60,7 +60,7 @@ function doLabels(items) {
   var zpl = fmt + tt;
   
   var filename = items[7] + '.txt';
-  var file = new Blob(zpl, 'text/plain');
+  var file = new Blob(zpl, {type: 'text/plain'});
   
   $('<a>', {href: URL.createObjectURL(file), download: filename}).click();
 
