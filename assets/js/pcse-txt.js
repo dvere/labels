@@ -57,31 +57,25 @@ function doLabels(items) {
     tt += ls + lm + '\n' +
       '^FN8^FDPieces: ' + i + ' of ' + qty + '^FS' + le;
   }
-  var zpl = fmt + tt;
-  
-  var fileName = split('^', items[7])[1] + '.txt';
-  var file = new Blob([zpl], {type: 'text/plain'});
-  
-  $('<a>', {href: URL.createObjectURL(file), download: filename, id: 'linky'})
-    .attr({visibility: 'hidden'})
-    .appendTo($('body'));
-  $('#linky').click();
 
   var saveData = (function () {
     var a = document.createElement("a");
     document.body.appendChild(a);
     a.style = "display: none";
     return function (data, fileName, type) {
-        var blob = new Blob([data], {type: type}),
-            url = window.URL.createObjectURL(blob);
-        a.href = url;
-        a.download = fileName;
-        a.click();
-        window.URL.revokeObjectURL(url);
+      var blob = new Blob([data], {type: type}),
+        url = window.URL.createObjectURL(blob);
+      a.href = url;
+      a.download = fileName;
+      a.click();
+      window.URL.revokeObjectURL(url);
     };
   }());
 
-  saveData(data, fileName, 'text/plain');
+  var zpl = fmt + tt,
+    fileName = split('^', items[7])[1] + '.txt'; 
+
+  saveData(zpl, fileName, 'text/plain');
 
 }
 
