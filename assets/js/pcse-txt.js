@@ -73,7 +73,7 @@ function doLabels(items) {
     
   for (var i = pieces; i > 0; i--) {
     let label = labelStart + commonFields +
-      '^FN8^FDPieces: ' + i + ' of ' + pieces +
+      '\n^FN8^FDPieces: ' + i + ' of ' + pieces +
       '^FS\n' + labelEnd;
     pkgLabels += label;
   }
