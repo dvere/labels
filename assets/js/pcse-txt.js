@@ -67,7 +67,7 @@ function doLabels(items) {
   pieces = items.pop(),
   fileName = items[7],
   commonFields = items.map(function(value, index) {
-    return '^FN' + index + '^FD' + value + '^FS\n';
+    return '^FN' + index + '^FD' + value + '^FS';
   }).join('\n'),
   pkgLabels = '';
     
