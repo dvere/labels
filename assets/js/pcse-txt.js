@@ -25,54 +25,49 @@ function getTrackingId(orderId, edDate, items, tab) {
 }
 
 function doLabels(items) {
-  var fmt = '^XA^DFR:DELIVERY.GRF^PON' +
-    '^FO5,5^GB780,1200,4^FS' +
-    '^FO5,240^GB780,860,3^FS' +
-    '^FO5,420^GB480,180,3^FS' +
-    '^FO482,240^GB302,360,3^FS' +
-    '^FO5,660^GB780,1,3^FS' +
-    '^FO5,820^GB780,1,3^FS' +
-    '^FO5,970^GB780,1,3^FS' +
-    '^FO215,60^BY2^BCN,150,N^FN0^FS' +
-    '^FO5,25^A0N,30^FB780,1,0,C^FN0^FS' +
-    '^FO15,275^A0N,140^FB480,1,0,C^FN1^FS' +
-    '^FO15,455^A0N,140^FB480,1,0,C^FN2^FS' +
-    '^FO500,365^A0N,140^FB280,1,0,C^FN3^FS' +
-    '^FO5,615^A0N,40^FB780,1,0,C^FN4^FS' +
-    '^FO15,700^A0N,100^FB780,1,0,C^FN6^FS' +
-    '^FO150,840^A0N,24^FN4^FS' +
-    '^FO150,870^A0N,24^FN5^FS' +
-    '^FO150,900^A0N,24^FN6^FS' +
-    '^FO15,1000^A0N,100^FB780,1,0,C^FN8^FS' +
-    '^FO170,1120^BY2^BCN,55,Y^FN7^FS^XZ';
+  var labelFormat = `
+^FX ${new Date().toISOString()}
+^XA
+^DFR:DELIVERY.GRF
+^FO5,5^GB780,1200,4^FS
+^FO5,240^GB780,860,3^FS
+^FO5,420^GB480,180,3^FS
+^FO482,240^GB302,360,3^FS
+^FO5,660^GB780,1,3^FS
+^FO5,820^GB780,1,3^FS
+^FO5,970^GB780,1,3^FS
+^FO215,60^BY2^BCN,150,N^FN0^FS
+^FO5,25^A0N,30^FB780,1,0,C^FN0^FS
+^FO15,275^A0N,140^FB480,1,0,C^FN1^FS
+^FO15,455^A0N,140^FB480,1,0,C^FN2^FS
+^FO500,365^A0N,140^FB280,1,0,C^FN3^FS
+^FO5,615^A0N,40^FB780,1,0,C^FN4^FS
+^FO15,700^A0N,100^FB780,1,0,C^FN6^FS
+^FO150,840^A0N,24^FN4^FS
+^FO150,870^A0N,24^FN5^FS
+^FO150,900^A0N,24^FN6^FS
+^FO15,1000^A0N,100^FB780,1,0,C^FN8^FS
+^FO170,1120^BY2^BCN,55,Y^FN7^FS
+^XZ
 
-  var ls = '^XA^XFR:DELIVERY.GRF^FS';
-  var le = '^XZ';
-  var qty = items.pop(),
-    fileName = items[7];
-  items = items.map(function(value, index) {
-    return '^FN' + index + '^FD' + value + '^FS';
-  });
-  var lm = items.join(''), tt = '';
-  for (var i = qty; i > 0; i--) {
-    tt += ls + lm + '^FN8^FDPieces: ' + i + ' of ' + qty + '^FS' + le;
+`,
+  labelStart = '^XA^XFR:DELIVERY.GRF\n',
+  labelEnd = '^XZ\n\n',
+  pieces = items.pop(),
+  fileName = items[7],
+  commonFields = items.map(function(value, index) {
+    return '^FN' + index + '^FD' + value + '^FS\n';
+  }).join('\n'),
+  pkgLabels = '';
+    
+  for (var i = pieces; i > 0; i--) {
+    let label = labelStart + commonFields +
+      '^FN8^FDPieces: ' + i + ' of ' + pieces +
+      '^FS\n' + labelEnd;
+    pkgLabels += label;
   }
 
-  var zpl = fmt + tt;
-
-  var saveData = (function () {
-    var a = document.createElement('a');
-    document.body.appendChild(a);
-    a.style = 'display: none';
-    return function (data, fileName, type) {
-      var blob = new Blob([data], {type: type}),
-        url = window.URL.createObjectURL(blob);
-      a.href = url;
-      a.download = fileName;
-      a.click();
-      window.URL.revokeObjectURL(url);
-    };
-  }());
+  var zpl = labelFormat + pkgLabels;
 
   saveData(zpl, fileName, 'text/plain');
 
@@ -134,3 +129,19 @@ $.when($.ready).then(function() {
   ];
   getTrackingId(orderId, edDate, items, tab);
 });
+
+function saveData() {
+  return (function () {
+    var a = document.createElement('a');
+    document.body.appendChild(a);
+    a.style = 'display: none';
+    return function (data, fileName, type) {
+      var blob = new Blob([data], { type: type }), url = window.URL.createObjectURL(blob);
+      a.href = url;
+      a.download = fileName;
+      a.click();
+      window.URL.revokeObjectURL(url);
+    };
+  } ());
+}
+
