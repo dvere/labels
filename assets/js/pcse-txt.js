@@ -24,6 +24,17 @@ function getTrackingId(orderId, edDate, items, tab) {
   });
 }
 
+function saveData(data, fileName, type) {
+  var a = document.createElement('a');
+  document.body.appendChild(a);
+  a.style = 'display: none';
+  var blob = new Blob([data], { type: type }), url = window.URL.createObjectURL(blob);
+  a.href = url;
+  a.download = fileName;
+  a.click();
+  window.URL.revokeObjectURL(url);
+};
+
 function doLabels(items) {
   var labelFormat = `
 ^FX ${new Date().toISOString()}
@@ -67,10 +78,7 @@ function doLabels(items) {
     pkgLabels += label;
   }
 
-  var zpl = labelFormat + pkgLabels;
-
-  saveData(zpl, fileName, 'text/plain');
-
+  saveData(labelFormat + pkgLabels, fileName, 'text/plain');
 }
 
 $.when($.ready).then(function() {
@@ -129,19 +137,3 @@ $.when($.ready).then(function() {
   ];
   getTrackingId(orderId, edDate, items, tab);
 });
-
-function saveData() {
-  return (function () {
-    var a = document.createElement('a');
-    document.body.appendChild(a);
-    a.style = 'display: none';
-    return function (data, fileName, type) {
-      var blob = new Blob([data], { type: type }), url = window.URL.createObjectURL(blob);
-      a.href = url;
-      a.download = fileName;
-      a.click();
-      window.URL.revokeObjectURL(url);
-    };
-  } ());
-}
-
