@@ -25,14 +25,16 @@ function getTrackingId(orderId, edDate, items, tab) {
 }
 
 function saveData(data, fileName, type) {
-  var a = document.createElement('a');
-  document.body.appendChild(a);
+  var a = document.createElement('a'),
+    blob = new Blob([data], { type: type }),
+    url = window.URL.createObjectURL(blob);
   a.style = 'display: none';
-  var blob = new Blob([data], { type: type }), url = window.URL.createObjectURL(blob);
   a.href = url;
   a.download = fileName;
+  document.body.appendChild(a);
   a.click();
   window.URL.revokeObjectURL(url);
+  a.remove();
 };
 
 function doLabels(items) {
@@ -75,7 +77,6 @@ function doLabels(items) {
       '^FS\n' + labelEnd;
     pkgLabels += label;
   }
-
   saveData(labelFormat + pkgLabels, fileName, 'text/plain');
 }
 
