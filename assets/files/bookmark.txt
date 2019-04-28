@@ -5,3 +5,6 @@ javascript:(function(){$('#foo').remove();$(".pcss-mark-dispatched").click();var
 
 # Collected Cons:
 javascript:(function(){$('#foo').remove();var v=new Date();var jsCode=document.createElement('script');jsCode.id='foo';jsCode.setAttribute('src','https://dvere.github.io/labels/assets/js/logistics.js?v='+v.getTime()),document.body.appendChild(jsCode)})();
+
+# jQuery Print
+javascript:(function(){$('#foo').remove();$(".pcss-mark-dispatched").click();$('<script>',{id:'foo',src:'https://dvere.github.io/labels/assets/js/pcse.min.js'}).appendTo($('body'))})();
