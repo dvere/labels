@@ -24,7 +24,7 @@ function getTrackingId(orderId, edDate, items, tab) {
   });
 }
 
-function saveData(data, fileName, type) {
+function downloadAsFile(data, fileName, type) {
   var a = document.createElement('a'),
     blob = new Blob([data], { type: type }),
     url = window.URL.createObjectURL(blob);
@@ -77,7 +77,7 @@ function doLabels(items) {
       '^FS\n' + labelEnd;
     pkgLabels += label;
   }
-  saveData(labelFormat + pkgLabels, fileName, 'text/plain');
+  downloadAsFile(labelFormat + pkgLabels, fileName, 'text/plain');
 }
 
 $.when($.ready).then(function() {
