@@ -81,17 +81,16 @@ function doLabels(items) {
 }
 
 $.when($.ready).then(function() {
-  var tab;
   if (window.location.pathname.split('/')[3] != 'Order') return;
-  var status = $('#OrderStatusId').val();
-  if ( status == 141560002 ) {
-    tab = 'ReadyForDespatch';
-  }
-  else if (status == 141560003) {
-    tab = 'Despatched';
-  }
-  else if (status == 100001) {
-    tab = 'Complete';
+  var tab,
+    tabs = {
+      141560002: 'ReadyForDespatch',
+      141560003: 'Despatched',
+      100001: 'Complete'
+    },
+    status = $('#OrderStatusId').val();
+  if (status in tabs) {
+    tab = tabs[status]
   }
   else {
     return;
@@ -109,10 +108,10 @@ $.when($.ready).then(function() {
     SLOUGH: '3S', SOUTHAMPTON: 'SO', SWINDON: 'SW', TELFORD: 'TF',
     WARWICK: 'MC'
   };
-  var orderId = $('h3').eq(0).text().trim().split(' ')[2];
-  var svc = $('nav.account-links').find('li').eq(1).text().trim();
-  var svcCode = serviceCentres[svc.substr(0,svc.indexOf(' ')).toUpperCase()];
-  var orderDetail = {};
+  var orderId = $('h3').eq(0).text().trim().split(' ')[2],
+      svc = $('nav.account-links').find('li').eq(1).text().trim(),
+      svcCode = serviceCentres[svc.substr(0,svc.indexOf(' ')).toUpperCase()],
+      orderDetail = {};
 
   $('.pcss-order-summary').find('.col-md-5').each(function( i, e ) {
     var v =  $('.pcss-order-summary').find('.col-md-7').eq(i).text().trim();
