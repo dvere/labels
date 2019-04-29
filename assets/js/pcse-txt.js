@@ -1,5 +1,5 @@
 function getTrackingId(orderId, edDate, items, tab) {
-  let pcseData = { tab: tab};
+  let pcseData = {tab: tab};
   if (edDate != 'TBA') { 
     edDate = edDate.split('/').reverse().join('-');
     pcseData.DateRangeStart = pcseData.DateRangeEnd = edDate;
@@ -20,11 +20,12 @@ function getTrackingId(orderId, edDate, items, tab) {
     return $(text).find('tr:contains('+ orderId +')').children().eq(9);
   }).then(function(td) {
     items.unshift($(td).html().split('<br>').sort().reverse()[0]);
-    doLabels(items);
+    var fileData = makeZpl(items);
+    downloadAsFile(fileData.zpl, fileData.file);
   });
 }
 
-function downloadAsFile(data, fileName, type) {
+function downloadAsFile(data, fileName, type = 'text/plain') {
   var a = document.createElement('a'),
     blob = new Blob([data], { type: type }),
     url = window.URL.createObjectURL(blob);
@@ -37,7 +38,7 @@ function downloadAsFile(data, fileName, type) {
   a.remove();
 };
 
-function doLabels(items) {
+function makeZpl(items) {
   var labelFormat = `
 ^FX ${new Date().toISOString()}
 ^XA
@@ -77,7 +78,10 @@ function doLabels(items) {
       '^FS\n' + labelEnd;
     pkgLabels += label;
   }
-  downloadAsFile(labelFormat + pkgLabels, fileName, 'text/plain');
+  return { 
+    file: fileName,
+    zpl: labelFormat + pkgLabels
+  };
 }
 
 $.when($.ready).then(function() {
