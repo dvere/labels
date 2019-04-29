@@ -13,7 +13,7 @@ function getTrackingId(orderId, edDate, items, tab) {
     method: 'GET',
     dataType: 'html',
     data: pcseData
-  }
+  };
   $.ajax(pcseInit).done(function(data) {
     return $(data).text();
   }).then(function(text) {
