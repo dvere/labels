@@ -65,7 +65,7 @@ function doLabels(items) {
   labelStart = '\n\n^XA^XFR:DELIVERY.GRF\n',
   labelEnd = '^XZ',
   pieces = items.pop(),
-  fileName = items[7],
+  fileName = items[1] + '_' + items[2] + '_' + items[7].split('-')[3],
   commonFields = items.map(function(value, index) {
     return '^FN' + index + '^FD' + value + '^FS';
   }).join('\n'),
