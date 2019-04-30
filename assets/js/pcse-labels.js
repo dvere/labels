@@ -2,14 +2,13 @@ function buildLabels(order) {
   let pcseData = {tab: order.tab},
     edDate = order.edDate,
     items = order.items;
-  
+
   if (edDate != 'TBA') { 
     edDate = edDate.split('/').reverse().join('-');
     pcseData.DateRangeStart = pcseData.DateRangeEnd = edDate;
     pcseData.SearchOn = 5; 
   }
 
-  // this would smell better with plain fetch...
   let pcseInit = {
     url: '/portal/Logistics/Orders',
     xhrFields: {
@@ -33,7 +32,7 @@ function buildLabels(order) {
 }
 
 function makeZpl(items) {
-  var labelFormat = `
+  var zpl = `
 ^FX ${new Date().toISOString()}
 ^XA
 ^DFR:DELIVERY.GRF
@@ -71,13 +70,13 @@ function makeZpl(items) {
       '^FS\n' + labelEnd;
     pkgLabels += label;
   }
-  var zpl = labelFormat + pkgLabels;
+  zpl += pkgLabels;
   return zpl;
 }
 
 function actionLabels(data, filename){
   var x = $('#foo').attr('data-file-type'),
-   fileType = Object.is(x, undefined) ? 'prn' : x;
+   fileType = Object.is(x, undefined) ? 'raw' : x;
   switch (fileType){
     case 'pdf':
       pdfFromZpl(data, filename);
@@ -85,16 +84,16 @@ function actionLabels(data, filename){
     case 'txt':
       downloadAsFile(data, filename, 'text/plain');
       break;
-    case 'prn':
-      directPrint(data);
+    case 'raw':
+      printLabel(data, 'text/plain');
       break;
   } 
 }
 
-function directPrint(zpl){
+function printLabel(data, type){
   var printWindow = window.open();
-  printWindow.document.open('text/plain')
-  printWindow.document.write(zpl);
+  printWindow.document.open(type)
+  printWindow.document.write(data);
   printWindow.document.close();
   printWindow.focus();
   printWindow.print();
@@ -139,7 +138,6 @@ function pdfFromZpl(zpl, filename){
 }
 
 $.when($.ready).then(function() {
-  // bail if not in an order
   if (window.location.pathname.split('/')[3] != 'Order') return;
   var status = $('#OrderStatusId').val(),
     tabs = {
@@ -147,13 +145,11 @@ $.when($.ready).then(function() {
       141560002: 'ReadyForDespatch',
       141560003: 'Despatched'
     };
-  // bail on invalid status 
   if (!(status in tabs)) {
     return;
   }
-  
+
   var qty = prompt("Enter number of packages:", 1);
-  // bail on invalid quantity
   if (qty == null || qty == "" || isNaN(qty)) {
     console.log("Input quantity error or cancelled by user");
     return;
@@ -168,7 +164,7 @@ $.when($.ready).then(function() {
     WARWICK: 'MC'
   };
 
-  var orderId = $('h3').eq(0).text().trim().split(' ')[2],
+  var orderId = $('h3').innerText.split(' ')[2],
       svc = $('nav.account-links').find('li').eq(1).text().trim(),
       svcCode = serviceCentres[svc.substr(0,svc.indexOf(' ')).toUpperCase()],
       orderDetail = {};
@@ -181,7 +177,7 @@ $.when($.ready).then(function() {
   var address = orderDetail['Shipping Address'].split(','),
       address_1 = address.shift(),
       postcode = address.pop();
-  
+
   var order = {
     id: orderId,
     tab: tabs[status],
