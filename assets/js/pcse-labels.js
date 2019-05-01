@@ -164,7 +164,7 @@ $.when($.ready).then(function() {
     WARWICK: 'MC'
   };
 
-  var orderId = $('h3').innerText.split(' ')[2],
+  var orderId = $('h3').eq(0).text().trim().split(' ')[2],
       svc = $('nav.account-links').find('li').eq(1).text().trim(),
       svcCode = serviceCentres[svc.substr(0,svc.indexOf(' ')).toUpperCase()],
       orderDetail = {};
