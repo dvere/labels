@@ -1,41 +1,15 @@
-function buildLabels(order) {
-  let pcseData = {tab: order.tab},
-    edDate = order.edDate,
-    items = order.items;
+const serviceCentres = {
+  BASINGSTOKE: 'BS', BECKTON: 'CV', BIRMINGHAM: 'BP', BRISTOL: 'BL',
+  CAMBRIDGE: 'CB', GATWICK: 'CW', LEEDS: 'LD', LETCHWORTH: 'LE',
+  MANCHESTER: 'MA', MEDWAY: 'ME', MILTON: 'MK', NEWCASTLE: 'NE',
+  NORWICH: 'NR', NOTTINGHAM: 'NG', PLYMOUTH: 'PL', READING: 'NB',
+  SLOUGH: '3S', SOUTHAMPTON: 'SO', SWINDON: 'SW', TELFORD: 'TF',
+  WARWICK: 'MC'
+};
 
-  if (edDate != 'TBA') { 
-    edDate = edDate.split('/').reverse().join('-');
-    pcseData.DateRangeStart = pcseData.DateRangeEnd = edDate;
-    pcseData.SearchOn = 5; 
-  }
-
-  let pcseInit = {
-    url: '/portal/Logistics/Orders',
-    xhrFields: {
-      withCredentials: true
-    },
-    method: 'GET',
-    dataType: 'html',
-    data: pcseData
-  }
-
-  $.ajax(pcseInit).done(function(data) {
-    return $(data).text();
-  }).then(function(text) {
-    return $(text).find('tr:contains('+ order.id +')').children().eq(9);
-  }).then(function(td) {
-    items.unshift($(td).html().split('<br>').sort().reverse()[0]);
-    let filename = items[1] + '_' + items[7],
-        zpl = makeZpl(items);
-    actionLabels(zpl, filename);
-  });
-}
-
-function makeZpl(items) {
-  var zpl = `
+var labelTemplate = `
 ^FX ${new Date().toISOString()}
-^XA
-^DFR:DELIVERY.GRF
+^XA^DFR:DELIVERY.GRF
 ^FO5,5^GB780,1200,4^FS
 ^FO5,240^GB780,860,3^FS
 ^FO5,420^GB480,180,3^FS
@@ -55,113 +29,139 @@ function makeZpl(items) {
 ^FO150,900^A0N,24^FN6^FS
 ^FO15,1000^A0N,100^FB780,1,0,C^FN8^FS
 ^FO170,1120^BY2^BCN,55,Y^FN7^FS
-^XZ`,
-  labelStart = '\n\n^XA^XFR:DELIVERY.GRF\n',
-  labelEnd = '^XZ',
-  pieces = items.pop(),
-  commonFields = items.map(function(value, index) {
-    return '^FN' + index + '^FD' + value + '^FS';
-  }).join('\n'),
-  pkgLabels = '';
-    
-  for (var i = pieces; i > 0; i--) {
-    let label = labelStart + commonFields +
-      '\n^FN8^FDPieces: ' + i + ' of ' + pieces +
-      '^FS\n' + labelEnd;
-    pkgLabels += label;
+^XZ`;
+
+var fileType = localStorage.getItem(data-file-type) || 'raw';
+
+class Label {
+  constructor(order) {
+    items = order.items;
+    labelStart = '\n\n^XA^XFR:DELIVERY.GRF\n';
+    labelEnd = '^XZ';
+    pieces = items.pop();
+    commonFields = items.map(function(v, i) {
+      return '^FN' + i + '^FD' + v + '^FS';
+    }).join('\n');
+    pkgLabels = '';
+
+    for (var i = pieces; i > 0; i--) {
+      let label = labelStart + commonFields +
+        '\n^FN8^FDPieces: ' + i + ' of ' + pieces +
+        '^FS\n' + labelEnd;
+      pkgLabels += label;
+    }
+    this.data = labelTemplate + pkgLabels;
   }
-  zpl += pkgLabels;
-  return zpl;
+
+  zpl2pdf() {
+    var fd = new FormData(),
+        url = 'https://lab1.dvere.org/l/';
+
+    fd.append('file',this.data);
+
+    var init = {
+      method: 'POST',
+      headers: {
+        'Accept': 'application/pdf'
+      },
+      mode: 'cors',
+      body: fd,
+      credentials: 'omit'
+    };
+
+    fetch(url, init)
+    .then(response => response.blob())
+    .then(data =>  {
+      this.data = data;
+    });
+  }
+
+  print() {
+    var printWindow = window.open();
+    printWindow.document.open(this.format)
+    printWindow.document.write(this.data);
+    printWindow.document.close();
+    printWindow.focus();
+    printWindow.print();
+    printWindow.close();
+  }
+
+  setFileName() {
+     this.filename = this.items[1] + '_' + this.items[7];
+  }
+
+  download() {
+    var a = document.createElement('a'),
+      blob = new Blob([this.data], { type: this.format }),
+      url = window.URL.createObjectURL(blob);
+    a.style = 'display: none';
+    a.href = url;
+    a.download = this.filename;
+    a.click();
+    window.URL.revokeObjectURL(url);
+  };
 }
 
-function actionLabels(data, filename){
-  var x = $('#foo').attr('data-file-type'),
-   fileType = Object.is(x, undefined) ? 'raw' : x;
+class Order {
+  constructor(tab, edDate, items) {
+    this.tab = tab;
+    this.edDate = edDate;
+    this.items = items;
+  }
+
+  getTrackingNumber() {
+    let p = {tab: this.tab},
+      e = this.edDate;
+
+    if (e != 'TBA') { 
+      e = e.split('/').reverse().join('-');
+      p.DateRangeStart = p.DateRangeEnd = e;
+      p.SearchOn = 5; 
+    }
+
+    let url = '/portal/Logistics/Orders?' + $.param(p),
+      req = new Request(url, {credentials: include, method: 'GET'});
+
+    fetch(req)
+    .then(resp => resp.text())
+    .then(html => $(html).find('tr:contains('+ order.id +')').children().eq(9))
+    .then(td => {
+      this.items.unshift($(td).html().split('<br>').sort().reverse()[0]);
+    })
+  }
+}
+
+function actionLabels(){
+  label = new Label(order);
+
   switch (fileType){
-    case 'pdf':
-      pdfFromZpl(data, filename);
-      break;
     case 'txt':
-      downloadAsFile(data, filename, 'text/plain');
+      label.setFileName();
+      label.format = 'text/plain';
+      label.download();
+      break;
+    case 'pdf':
+      label.zpl2pdf();
+      label.format = 'application/pdf';
+      label.print();
       break;
     case 'raw':
-      printLabel(data, 'text/plain');
+      label.format = 'text/plain';
+      label.print();
       break;
   } 
 }
 
-function printLabel(data, type){
-  var printWindow = window.open();
-  printWindow.document.open(type)
-  printWindow.document.write(data);
-  printWindow.document.close();
-  printWindow.focus();
-  printWindow.print();
-  printWindow.close();
-}
-
-function downloadAsFile(data, filename, type) {
-  var a = document.createElement('a'),
-    blob = new Blob([data], { type: type }),
-    url = window.URL.createObjectURL(blob);
-  a.style = 'display: none';
-  a.href = url;
-  a.download = filename;
-  document.body.appendChild(a);
-  a.click();
-  window.URL.revokeObjectURL(url);
-  a.remove();
-};
-
-function pdfFromZpl(zpl, filename){
-  var fd = new FormData(),
-      headers = new Headers(),
-      url = 'https://lab1.dvere.org/l/';
-
-  fd.append('file',zpl);
-  headers.accept = 'application/pdf';
-
-  var init = {
-    method: 'POST',
-    headers: headers,
-    mode: 'cors',
-    body: fd,
-    credentials: 'omit'
-  },
-  myRequest = new Request(url, init);
-
-  fetch(myRequest).then(function(response){
-    return response.blob();
-  }).then(function(blob){
-    downloadAsFile(blob, filename, 'application/pdf');
-  });
-}
-
 $.when($.ready).then(function() {
-  if (window.location.pathname.split('/')[3] != 'Order') return;
-  var status = $('#OrderStatusId').val(),
-    tabs = {
-      100001: 'Complete',
-      141560002: 'ReadyForDespatch',
-      141560003: 'Despatched'
-    };
-  if (!(status in tabs)) {
-    return;
-  }
+  var p3 = document.location.pathname.endsWith('/Orders'),
+    status = document.getElementById('order-status').value,
+    tabs = ['Complete', 'ReadyForDespatch', 'Despatched'];
+  if (!tabs.includes(status) || !(p3)) return;
 
   var qty = prompt("Enter number of packages:", 1);
-  if (qty == null || qty == "" || isNaN(qty)) {
+  if (qty == null || qty == "" || isNaN(qty - 0)) {
     console.log("Input quantity error or cancelled by user");
     return;
-  };
-
-  var serviceCentres = {
-    BASINGSTOKE: 'BS', BECKTON: 'CV', BIRMINGHAM: 'BP', BRISTOL: 'BL',
-    CAMBRIDGE: 'CB', GATWICK: 'CW', LEEDS: 'LD', LETCHWORTH: 'LE',
-    MANCHESTER: 'MA', MEDWAY: 'ME', MILTON: 'MK', NEWCASTLE: 'NE',
-    NORWICH: 'NR', NOTTINGHAM: 'NG', PLYMOUTH: 'PL', READING: 'NB',
-    SLOUGH: '3S', SOUTHAMPTON: 'SO', SWINDON: 'SW', TELFORD: 'TF',
-    WARWICK: 'MC'
   };
 
   var orderId = $('h3').eq(0).text().trim().split(' ')[2],
@@ -176,22 +176,22 @@ $.when($.ready).then(function() {
 
   var address = orderDetail['Shipping Address'].split(','),
       address_1 = address.shift(),
-      postcode = address.pop();
+      postcode = address.pop(),
+      edDate = orderDetail['Expected Delivery Date'],
+      tab = status,
+      items = [
+        orderDetail['Delivery Route And Stop'].substr(0,4),
+        orderDetail['Location Code'],
+        svcCode,
+        address_1,
+        address,
+        postcode,
+        orderId,
+        qty
+      ];
 
-  var order = {
-    id: orderId,
-    tab: tabs[status],
-    edDate: orderDetail['Expected Delivery Date'],
-    items: [
-      orderDetail['Delivery Route And Stop'].substr(0,4),
-      orderDetail['Location Code'],
-      svcCode,
-      address_1,
-      address,
-      postcode,
-      orderId,
-      qty
-    ]
-  };
-  buildLabels(order);
+  var order = new Order(tab, edDate, items);
+
+  order.getTrackingNumber();
+  actionLabels(order);  
 });
