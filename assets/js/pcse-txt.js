@@ -32,10 +32,10 @@ function downloadAsFile(data, fileName, type = 'text/plain') {
   a.style = 'display: none';
   a.href = url;
   a.download = fileName;
-  document.body.appendChild(a);
+  //document.body.appendChild(a);
   a.click();
   window.URL.revokeObjectURL(url);
-  a.remove();
+  //a.remove();
 };
 
 function makeZpl(items) {
