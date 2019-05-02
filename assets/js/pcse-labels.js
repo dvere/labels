@@ -31,7 +31,7 @@ var labelTemplate = `
 ^FO170,1120^BY2^BCN,55,Y^FN7^FS
 ^XZ`;
 
-var fileType = localStorage.getItem(data-file-type) || 'raw';
+var fileType = localStorage.getItem('data-file-type') || 'raw';
 
 class Label {
   constructor(order) {
