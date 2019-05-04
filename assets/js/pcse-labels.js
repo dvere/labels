@@ -1,14 +1,4 @@
-const serviceCentres = {
-  BASINGSTOKE: 'BS', BECKTON: 'CV', BIRMINGHAM: 'BP', BRISTOL: 'BL',
-  CAMBRIDGE: 'CB', GATWICK: 'CW', LEEDS: 'LD', LETCHWORTH: 'LE',
-  MANCHESTER: 'MA', MEDWAY: 'ME', MILTON: 'MK', NEWCASTLE: 'NE',
-  NORWICH: 'NR', NOTTINGHAM: 'NG', PLYMOUTH: 'PL', READING: 'NB',
-  SLOUGH: '3S', SOUTHAMPTON: 'SO', SWINDON: 'SW', TELFORD: 'TF',
-  WARWICK: 'MC'
-};
-
-var labelTemplate = `
-^FX ${new Date().toISOString()}
+var template = `^FX ${new Date().toISOString()}
 ^XA^DFR:DELIVERY.GRF
 ^FO5,5^GB780,1200,4^FS
 ^FO5,240^GB780,860,3^FS
@@ -29,169 +19,181 @@ var labelTemplate = `
 ^FO150,900^A0N,24^FN6^FS
 ^FO15,1000^A0N,100^FB780,1,0,C^FN8^FS
 ^FO170,1120^BY2^BCN,55,Y^FN7^FS
-^XZ`;
+^XZ`
+var serviceCentres = {
+  BASINGSTOKE: 'BS', BECKTON: 'CV', BIRMINGHAM: 'BP', BRISTOL: 'BL',
+  CAMBRIDGE: 'CB', GATWICK: 'CW', LEEDS: 'LD', LETCHWORTH: 'LE',
+  MANCHESTER: 'MA', MEDWAY: 'ME', MILTON: 'MK', NEWCASTLE: 'NE',
+  NORWICH: 'NR', NOTTINGHAM: 'NG', PLYMOUTH: 'PL', READING: 'NB',
+  SLOUGH: '3S', SOUTHAMPTON: 'SO', SWINDON: 'SW', TELFORD: 'TF', WARWICK: 'MC'
+}
+var fileType = localStorage.getItem('data-file-type') || 'raw'
+var path = document.location.pathname.split('/')[3]
+var status = document.getElementById('order-status').value
+var labelStart = '\n\n^XA^XFR:DELIVERY.GRF\n'
+var labelEnd = '^XZ'
+var tabs = ['Complete', 'ReadyForDespatch', 'Despatched']
 
-var fileType = localStorage.getItem('data-file-type') || 'raw';
-
-class Label {
-  constructor(order) {
-    items = order.items;
-    labelStart = '\n\n^XA^XFR:DELIVERY.GRF\n';
-    labelEnd = '^XZ';
-    pieces = items.pop();
-    commonFields = items.map(function(v, i) {
-      return '^FN' + i + '^FD' + v + '^FS';
-    }).join('\n');
-    pkgLabels = '';
-
-    for (var i = pieces; i > 0; i--) {
-      let label = labelStart + commonFields +
-        '\n^FN8^FDPieces: ' + i + ' of ' + pieces +
-        '^FS\n' + labelEnd;
-      pkgLabels += label;
-    }
-    this.data = labelTemplate + pkgLabels;
-  }
-
-  zpl2pdf() {
-    var fd = new FormData(),
-        url = 'https://lab1.dvere.org/l/';
-
-    fd.append('file',this.data);
-
-    var init = {
-      method: 'POST',
-      headers: {
-        'Accept': 'application/pdf'
-      },
-      mode: 'cors',
-      body: fd,
-      credentials: 'omit'
-    };
-
-    fetch(url, init)
-    .then(response => response.blob())
-    .then(data =>  {
-      this.data = data;
-    });
-  }
-
-  print() {
-    var printWindow = window.open();
-    printWindow.document.open(this.format)
-    printWindow.document.write(this.data);
-    printWindow.document.close();
-    printWindow.focus();
-    printWindow.print();
-    printWindow.close();
-  }
-
-  setFileName() {
-     this.filename = this.items[1] + '_' + this.items[7];
-  }
-
-  download() {
-    var a = document.createElement('a'),
-      blob = new Blob([this.data], { type: this.format }),
-      url = window.URL.createObjectURL(blob);
-    a.style = 'display: none';
-    a.href = url;
-    a.download = this.filename;
-    a.click();
-    window.URL.revokeObjectURL(url);
-  };
+function checkStatus (status, path) {
+  return (tabs.includes(status) && path === 'Order')
 }
 
-class Order {
-  constructor(tab, edDate, items) {
-    this.tab = tab;
-    this.edDate = edDate;
-    this.items = items;
+function checkQty (qty) {
+  qty = parseInt(qty)
+  return !(qty === 0 || qty == null || isNaN(qty))
+}
+
+function Order () {
+  this.detail = new Details()
+  this.status = status
+  this.itemsArray = [
+    this.detail['Delivery Route And Stop'].substr(0,4),
+    this.detail['Location Code'],
+    this.detail.svcCode,
+    this.detail.address_1,
+    this.detail.address,
+    this.detail.postcode,
+    this.detail.id
+  ]
+}
+
+function Details () {
+  var svc = $('nav.account-links').find('li').eq(1).text().trim()
+  var self = this
+  $('div.col-md-5').each(function( i, e ) {
+	self[e.innerText] = e.nextElementSibling.innerText
+  })
+  this.id = $('h3').eq(0).text().trim().split(' ')[2]
+  this.svcCode = serviceCentres[svc.substr(0,svc.indexOf(' ')).toUpperCase()]
+  this.address = this['Shipping Address'].split(',')
+  this.address_1 = this.address.shift()
+  this.postcode = this.address.pop()
+}
+
+function getCons(order) {
+  var p = {tab: order.status}
+  var e = order.detail['Expected Delivery Date']
+
+  if (e !== 'TBA') { 
+    e = e.split('/').reverse().join('-')
+    p.DateRangeStart = p.DateRangeEnd = e
+    p.SearchOn = 5
   }
 
-  getTrackingNumber() {
-    let p = {tab: this.tab},
-      e = this.edDate;
+  let url = '/portal/Logistics/Orders?' + $.param(p)
+  let req = new Request(url, {credentials: 'include', method: 'GET'})
 
-    if (e != 'TBA') { 
-      e = e.split('/').reverse().join('-');
-      p.DateRangeStart = p.DateRangeEnd = e;
-      p.SearchOn = 5; 
+  fetch(req)
+  .then(response => response.text())
+  .then(html => $(html).find('tr:contains('+ order.detail.id +')'))
+  .then(row => $(row).find('td').eq(9).text().split('<br>').sort().reverse()[0])
+  .then(tn => {
+    order.itemsArray.unshift(tn)
+    var label = new Label(order.itemsArray)
+    doOutput(label)
+  })
+}
+
+function doOutput(l) {
+  if (l.format === 'application/pdf') {
+    zpl2pdf(l)
+  } else {
+    if (l.filename) {
+      labelDownload(l)
+    } else {
+      labelPrint(l)
     }
-
-    let url = '/portal/Logistics/Orders?' + $.param(p),
-      req = new Request(url, {credentials: include, method: 'GET'});
-
-    fetch(req)
-    .then(resp => resp.text())
-    .then(html => $(html).find('tr:contains('+ order.id +')').children().eq(9))
-    .then(td => {
-      this.items.unshift($(td).html().split('<br>').sort().reverse()[0]);
-    })
   }
 }
 
-function actionLabels(){
-  label = new Label(order);
+function Label (items) {
+  let qty = items.pop()
+  let commonFields = items.map(function(v, i) {
+    return '^FN' + i + '^FD' + v + '^FS'
+  }).join('\n')
+  let pkgLabels = '';
 
-  switch (fileType){
+  for (var i = qty; i > 0; i--) {
+    let label = labelStart + commonFields +
+      '\n^FN8^FDPieces: ' + i + ' of ' + qty +
+      '^FS\n' + labelEnd
+    pkgLabels += label
+  }
+  this.data = template + pkgLabels
+
+  switch (fileType) {
     case 'txt':
-      label.setFileName();
-      label.format = 'text/plain';
-      label.download();
-      break;
+      this.filename = setFileName(items)
+      this.format = 'text/plain'
+      break
     case 'pdf':
-      label.zpl2pdf();
-      label.format = 'application/pdf';
-      label.print();
+      this.filename = setFileName(items)
+      this.format = 'application/pdf'
       break;
     case 'raw':
-      label.format = 'text/plain';
-      label.print();
+      this.format = 'text/plain'
       break;
-  } 
+  }
+}
+
+function zpl2pdf (l) {
+  let fd = new FormData()
+  let url = 'https://lab1.dvere.org/l/'
+
+  fd.append('file',l.data)
+
+  let init = {
+    method: 'POST',
+    headers: {
+      'Accept': 'application/pdf'
+    },
+    mode: 'cors',
+    body: fd,
+    credentials: 'omit'
+  }
+
+  fetch(url, init)
+  .then(response => response.blob())
+  .then(data => {
+    l.data = data
+    labelDownload(l)
+  })
+}
+
+function labelPrint(printObject) {
+    let printWindow = window.open()
+    printWindow.document.open(printObject.format)
+    printWindow.document.write(printObject.data)
+    printWindow.document.close()
+    printWindow.focus()
+    printWindow.print()
+    printWindow.close()
+}
+
+function setFileName (items) {
+      return items[1] + '_' + items[7]
+}
+
+function labelDownload (labelObject) {
+    let a = document.createElement('a')
+    let blob = new Blob([labelObject.data], { type: labelObject.format })
+    let url = window.URL.createObjectURL(blob)
+    a.style = 'display: none'
+    a.href = url
+    a.download = labelObject.filename
+    a.click()
+    window.URL.revokeObjectURL(url)
 }
 
 $.when($.ready).then(function() {
-  var p3 = document.location.pathname.endsWith('/Orders'),
-    status = document.getElementById('order-status').value,
-    tabs = ['Complete', 'ReadyForDespatch', 'Despatched'];
-  if (!tabs.includes(status) || !(p3)) return;
 
-  var qty = prompt("Enter number of packages:", 1);
-  if (qty == null || qty == "" || isNaN(qty - 0)) {
-    console.log("Input quantity error or cancelled by user");
-    return;
-  };
+  if (!checkStatus(status,path)) return;
 
-  var orderId = $('h3').eq(0).text().trim().split(' ')[2],
-      svc = $('nav.account-links').find('li').eq(1).text().trim(),
-      svcCode = serviceCentres[svc.substr(0,svc.indexOf(' ')).toUpperCase()],
-      orderDetail = {};
+  var qty = prompt("Enter number of packages:", 1)
 
-  $('.pcss-order-summary').find('.col-md-5').each(function( i, e ) {
-    var v =  $('.pcss-order-summary').find('.col-md-7').eq(i).text().trim();
-    orderDetail[$(e).text()] = v;
-  });
+  if (!checkQty(qty)) return;
 
-  var address = orderDetail['Shipping Address'].split(','),
-      address_1 = address.shift(),
-      postcode = address.pop(),
-      edDate = orderDetail['Expected Delivery Date'],
-      tab = status,
-      items = [
-        orderDetail['Delivery Route And Stop'].substr(0,4),
-        orderDetail['Location Code'],
-        svcCode,
-        address_1,
-        address,
-        postcode,
-        orderId,
-        qty
-      ];
-
-  var order = new Order(tab, edDate, items);
-
-  order.getTrackingNumber();
-  actionLabels(order);  
-});
+  var order = new Order(status)
+  order.itemsArray.push(qty)
+  getCons(order)
+})
