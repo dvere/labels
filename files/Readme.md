@@ -9,7 +9,7 @@
 A javascript bookmarklet that fires the label script when run if in an
 appropriate order page. Can be added as the URL of a browser bookmark bar link.
 
-## files/l/
+## files/php/
 
 - index.php
 
