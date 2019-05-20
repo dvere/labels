@@ -86,7 +86,7 @@ function getCons(order) {
   fetch(req)
   .then(response => response.text())
   .then(html => $(html).find('tr:contains('+ order.detail.id +')'))
-  .then(row => $(row).find('td').eq(9).innerText.split('\n').sort().reverse()[0])
+  .then(row => $(row).find('td').eq(9).html().split('<br>').sort().reverse()[0])
   .then(tn => {
     order.itemsArray.unshift(tn)
     var label = new Label(order.itemsArray)
