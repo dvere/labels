@@ -129,10 +129,11 @@ function Label (items) {
     case 'pdf':
       this.filename = setFileName(items)
       this.format = 'application/pdf'
-      break;
+      break
     case 'raw':
       this.format = 'text/plain'
-      break;
+      this.data = '<pre>\n' + this.data + '\n</pre>\n'
+      break
   }
 }
 
