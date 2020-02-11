@@ -65,7 +65,8 @@ function Details () {
   })
   this.id = $('h3').eq(0).text().trim().split(' ')[2]
   this.svcCode = serviceCentres[svc.substr(0,svc.indexOf(' ')).toUpperCase()]
-  this.address = this['Shipping Address'].trim().split(',')
+  let address = this['Shipping Address'].split(',')
+  this.address = address.map(s => s.trim())
   this.address_1 = this.address.shift().trim()
   this.postcode = this.address.pop().trim()
 }
