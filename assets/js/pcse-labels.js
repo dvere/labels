@@ -109,7 +109,7 @@ function doOutput(l) {
 function Label (items) {
   let qty = items.pop()
   let commonFields = items.map(function(v, i) {
-    return '^FN' + i + '^FD' + v + '^FS'
+    return '^FN' + i + '^FD' + trim(v) + '^FS'
   }).join('\n')
   let pkgLabels = '';
 
