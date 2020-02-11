@@ -55,6 +55,7 @@ function Order () {
     this.detail.postcode,
     this.detail.id
   ]
+  this.itemsArray.map(str => str.trim())
 }
 
 function Details () {
@@ -196,6 +197,5 @@ $.when($.ready).then(function() {
 
   var order = new Order(status)
   order.itemsArray.push(qty)
-  order.itemsArray.map(s => s.trim())
   getCons(order)
 })
