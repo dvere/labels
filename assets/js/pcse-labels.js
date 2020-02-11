@@ -50,9 +50,9 @@ function Order () {
     this.detail['Delivery Route And Stop'].substr(0,4),
     this.detail['Location Code'],
     this.detail.svcCode,
-    this.detail.address_1.trim(),
+    this.detail.address_1,
     this.detail.address,
-    this.detail.postcode.trim(),
+    this.detail.postcode,
     this.detail.id
   ]
 }
@@ -196,5 +196,6 @@ $.when($.ready).then(function() {
 
   var order = new Order(status)
   order.itemsArray.push(qty)
+  order.map(s => s.trim())
   getCons(order)
 })
