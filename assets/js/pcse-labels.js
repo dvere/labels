@@ -55,7 +55,6 @@ function Order () {
     this.detail.postcode,
     this.detail.id
   ]
-  this.itemsArray.map(str => str.trim())
 }
 
 function Details () {
@@ -66,9 +65,9 @@ function Details () {
   })
   this.id = $('h3').eq(0).text().trim().split(' ')[2]
   this.svcCode = serviceCentres[svc.substr(0,svc.indexOf(' ')).toUpperCase()]
-  this.address = this['Shipping Address'].split(',')
-  this.address_1 = this.address.shift()
-  this.postcode = this.address.pop()
+  this.address = this['Shipping Address'].trim().split(',')
+  this.address_1 = this.address.shift().trim()
+  this.postcode = this.address.pop().trim()
 }
 
 function getCons(order) {
