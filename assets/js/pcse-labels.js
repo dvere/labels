@@ -50,9 +50,9 @@ function Order () {
     this.detail['Delivery Route And Stop'].substr(0,4),
     this.detail['Location Code'],
     this.detail.svcCode,
-    this.detail.address_1,
+    this.detail.address_1.trim(),
     this.detail.address,
-    this.detail.postcode,
+    this.detail.postcode.trim(),
     this.detail.id
   ]
 }
@@ -109,7 +109,7 @@ function doOutput(l) {
 function Label (items) {
   let qty = items.pop()
   let commonFields = items.map(function(v, i) {
-    return '^FN' + i + '^FD' + v.trim() + '^FS'
+    return '^FN' + i + '^FD' + v + '^FS'
   }).join('\n')
   let pkgLabels = '';
 
