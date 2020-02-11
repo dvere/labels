@@ -196,6 +196,6 @@ $.when($.ready).then(function() {
 
   var order = new Order(status)
   order.itemsArray.push(qty)
-  order.map(s => s.trim())
+  order.itemsArray.map(s => s.trim())
   getCons(order)
 })
