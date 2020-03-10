@@ -1,5 +1,30 @@
-var template = `^FX ${new Date().toISOString()}
-^XA^DFR:DELIVERY.GRF^LH20,16
+var serviceCentres = {
+  BASINGSTOKE: 'BS', BECKTON: 'CV', BIRMINGHAM: 'BP', BRISTOL: 'BL',
+  CAMBRIDGE: 'CB', GATWICK: 'CW', LEEDS: 'LD', LETCHWORTH: 'LE',
+  MANCHESTER: 'MA', MEDWAY: 'ME', MILTON: 'MK', NEWCASTLE: 'NE',
+  NORWICH: 'NR', NOTTINGHAM: 'NG', PLYMOUTH: 'PL', READING: 'NB',
+  SLOUGH: '3S', SOUTHAMPTON: 'SO', SWINDON: 'SW', TELFORD: 'TF', WARWICK: 'MC'
+}
+var fileType = localStorage.getItem('data-file-type') || 'raw'
+var labelType = localStorage.getItem('data-label-type') || 3
+var path = document.location.pathname.split('/')[3]
+var status = document.getElementById('order-status').value
+var labelStart = '\n\n^XA^XFR:DELIVERY.GRF\n'
+var labelEnd = '\n^XZ\n'
+var tabs = ['Complete', 'ReadyForDespatch', 'Despatched']
+
+function Template () {
+  let format3 = `^FO400,15^GB160,80,80,,0^FS
+^FO10,30^BY2,3,60^BCN,60,Y,Y^FN0^FS
+^FO400,120^A0N,80^FN1^FS
+^FO400,220^A0N,60^FN2^FS
+^FO410,25^A0N,80^FR^FN3^FS
+^FO10,180^A0N,25^FN4^FS
+^FO10,120^A0N,50^FN5^FS
+^FO70,320^BY2,3,60^BCN,60,Y,Y^FN6^FS
+^FO10,220^A0N,50^FN8^FS`
+
+  let format4 = `LH20,16
 ^FO5,5^GB780,1200,4^FS
 ^FO5,240^GB780,860,3^FS
 ^FO5,420^GB480,180,3^FS
@@ -13,26 +38,25 @@ var template = `^FX ${new Date().toISOString()}
 ^FO15,455^A0N,140^FB480,1,0,C^FN2^FS
 ^FO500,365^A0N,140^FB280,1,0,C^FN3^FS
 ^FO5,615^A0N,40^FB780,1,0,C^FN4^FS
-^FO15,700^A0N,100^FB780,1,0,C^FN6^FS
+^FO15,700^A0N,100^FB780,1,0,C^FN5^FS
 ^FO150,840^A0N,24^FN4^FS
-^FO150,870^A0N,24^FN5^FS
-^FO150,900^A0N,24^FN6^FS
+^FO150,870^A0N,24^FN7^FS
+^FO150,900^A0N,24^FN5^FS
 ^FO15,1000^A0N,100^FB780,1,0,C^FN8^FS
-^FO170,1120^BY2^BCN,55,Y^FN7^FS
-^XZ`
-var serviceCentres = {
-  BASINGSTOKE: 'BS', BECKTON: 'CV', BIRMINGHAM: 'BP', BRISTOL: 'BL',
-  CAMBRIDGE: 'CB', GATWICK: 'CW', LEEDS: 'LD', LETCHWORTH: 'LE',
-  MANCHESTER: 'MA', MEDWAY: 'ME', MILTON: 'MK', NEWCASTLE: 'NE',
-  NORWICH: 'NR', NOTTINGHAM: 'NG', PLYMOUTH: 'PL', READING: 'NB',
-  SLOUGH: '3S', SOUTHAMPTON: 'SO', SWINDON: 'SW', TELFORD: 'TF', WARWICK: 'MC'
+^FO170,1120^BY2^BCN,55,Y^FN6^FS`
+
+  this.zpl = '^FX ' + ${new Date().toISOString()} + '\n^XA\n^DFR:DELIVERY.GRF\n'
+
+  switch (labelType) {
+    case 4:
+      this.zpl += format4
+      break;
+    case 3:
+      this.zpl += format3
+      break;
+  }
+  this.zpl += labelEnd
 }
-var fileType = localStorage.getItem('data-file-type') || 'raw'
-var path = document.location.pathname.split('/')[3]
-var status = document.getElementById('order-status').value
-var labelStart = '\n\n^XA^XFR:DELIVERY.GRF\n'
-var labelEnd = '^XZ'
-var tabs = ['Complete', 'ReadyForDespatch', 'Despatched']
 
 function checkStatus (status, path) {
   return (tabs.includes(status) && path === 'Order')
@@ -51,10 +75,12 @@ function Order () {
     this.detail['Location Code'],
     this.detail.svcCode,
     this.detail.address_1,
-    this.detail.address,
     this.detail.postcode,
     this.detail.id
   ]
+  if (labelType === 4) {
+    this.itemsArray.push(this.detail.address)
+  }
 }
 
 function Details () {
@@ -65,10 +91,9 @@ function Details () {
   })
   this.id = $('h3').eq(0).text().trim().split(' ')[2]
   this.svcCode = serviceCentres[svc.substr(0,svc.indexOf(' ')).toUpperCase()]
-  let address = this['Shipping Address'].split(',')
-  this.address = address.map(s => s.trim())
-  this.address_1 = this.address.shift().trim()
-  this.postcode = this.address.pop().trim()
+  this.address = this['Shipping Address'].split(',')
+  this.address_1 = this.address.shift()
+  this.postcode = this.address.pop()
 }
 
 function getCons(order) {
@@ -87,7 +112,7 @@ function getCons(order) {
   fetch(req)
   .then(response => response.text())
   .then(html => $(html).find('tr:contains('+ order.detail.id +')'))
-  .then(row => $(row).find('td').eq(9).html().split('<br>').sort().reverse()[0])
+  .then(row => $(row).find('td').eq(9).innerText.split('\n').sort().reverse()[0])
   .then(tn => {
     order.itemsArray.unshift(tn)
     var label = new Label(order.itemsArray)
@@ -108,6 +133,7 @@ function doOutput(l) {
 }
 
 function Label (items) {
+  let template = new Template()
   let qty = items.pop()
   let commonFields = items.map(function(v, i) {
     return '^FN' + i + '^FD' + v + '^FS'
@@ -117,24 +143,23 @@ function Label (items) {
   for (var i = qty; i > 0; i--) {
     let label = labelStart + commonFields +
       '\n^FN8^FDPieces: ' + i + ' of ' + qty +
-      '^FS\n' + labelEnd
+      '^FS' + labelEnd
     pkgLabels += label
   }
-  this.data = template + pkgLabels
+    this.data = template + pkgLabels
 
   switch (fileType) {
     case 'txt':
       this.filename = setFileName(items)
       this.format = 'text/plain'
-      break
+      break;
     case 'pdf':
       this.filename = setFileName(items)
       this.format = 'application/pdf'
-      break
+      break;
     case 'raw':
       this.format = 'text/plain'
-      this.data = '<pre>\n' + this.data + '\n</pre>\n'
-      break
+      break;
   }
 }
 
