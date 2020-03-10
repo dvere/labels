@@ -48,13 +48,10 @@ function Template () {
   
   this.zpl = '^FX ' + new Date().toISOString() + '\n^XA\n^DFR:DELIVERY.GRF\n'
 
-  switch (labelType) {
-    case 4:
-      this.zpl += format4
-      break;
-    case 3:
-      this.zpl += format3
-      break;
+  if (labelType === 4) {
+    this.zpl += format4
+  } else {
+    this.zpl += format3
   }
   this.zpl += labelEnd
 }
