@@ -150,7 +150,7 @@ function Label (items) {
     case 'txt':
       this.filename = setFileName(items)
       this.format = 'text/plain'
-      break;
+      break
     case 'pdf':
       this.filename = setFileName(items)
       this.format = 'application/pdf'
