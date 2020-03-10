@@ -14,11 +14,11 @@ var labelEnd = '\n^XZ\n'
 var tabs = ['Complete', 'ReadyForDespatch', 'Despatched']
 
 function Template () {
-  let format3 = `^FO525,15^GB160,80,80,,0^FS
+  let format3 = `^FO500,15^GB160,80,80,,0^FS
 ^FO10,30^BY2,3,60^BCN,60,Y,Y^FN0^FS
-^FO525,120^A0N,80^FN1^FS
-^FO525,220^A0N,60^FN2^FS
-^FO535,25^A0N,80^FR^FN3^FS
+^FO500,120^A0N,80^FN1^FS
+^FO500,220^A0N,60^FN2^FS
+^FO510,25^A0N,80^FR^FN3^FS
 ^FO10,180^A0N,25^FN4^FS
 ^FO10,120^A0N,50^FN5^FS
 ^FO70,320^BY2,3,60^BCN,60,Y,Y^FN6^FS
