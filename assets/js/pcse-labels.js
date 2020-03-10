@@ -147,7 +147,7 @@ function Label (items) {
       '^FS' + labelEnd
     pkgLabels += label
   }
-    this.data = template + pkgLabels
+    this.data = template.zpl + pkgLabels
 
   switch (fileType) {
     case 'txt':
