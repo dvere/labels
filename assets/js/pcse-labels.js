@@ -45,7 +45,8 @@ function Template () {
 ^FO15,1000^A0N,100^FB780,1,0,C^FN8^FS
 ^FO170,1120^BY2^BCN,55,Y^FN6^FS`
 
-  this.zpl = '^FX ' + new Date().toISOString() + '\n^XA\n^DFR:DELIVERY.GRF\n'
+  let timeStamp = new Date()
+  this.zpl = '^FX ' + timeStamp.toISOString() + '\n^XA\n^DFR:DELIVERY.GRF\n'
 
   switch (labelType) {
     case 4:
