@@ -45,10 +45,9 @@ function Template () {
 ^FO15,1000^A0N,100^FB780,1,0,C^FN8^FS
 ^FO170,1120^BY2^BCN,55,Y^FN6^FS`
 
-  
   this.zpl = '^FX ' + new Date().toISOString() + '\n^XA\n^DFR:DELIVERY.GRF\n'
 
-  if (labelType === 4) {
+  if (labelType == 4) {
     this.zpl += format4
   } else {
     this.zpl += format3
@@ -76,7 +75,7 @@ function Order () {
     this.detail.postcode,
     this.detail.id
   ]
-  if (labelType === 4) {
+  if (labelType == 4) {
     this.itemsArray.push(this.detail.address)
   }
 }
@@ -150,13 +149,12 @@ function Label (items) {
     case 'txt':
       this.filename = setFileName(items)
       this.format = 'text/plain'
-      break
+      break;
     case 'pdf':
       this.filename = setFileName(items)
       this.format = 'application/pdf'
       break;
-    case 'raw':
-      this.format = 'text/plain'
+    default:
       break;
   }
 }
@@ -187,8 +185,8 @@ function zpl2pdf (l) {
 
 function labelPrint(printObject) {
     let printWindow = window.open()
-    printWindow.document.open(printObject.format)
-    printWindow.document.write(printObject.data)
+    printWindow.document.open()
+    printWindow.document.write('<pre>' + printObject.data + '</pre>')
     printWindow.document.close()
     printWindow.focus()
     printWindow.print()
