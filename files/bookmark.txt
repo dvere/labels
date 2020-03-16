@@ -1,2 +1,2 @@
 # JavaScript 'bookmarklet' URL to add to Bookmarks Bar link
-javascript:(function(){$('#foo').remove();$(".pcss-mark-dispatched").click();$('<script>',{id:'foo',src:'https://dvere.github.io/labels/assets/js/pcse.min.js'}).appendTo($('body'))})();
+javascript:(function(){$('#foo').remove();$(".pcss-mark-dispatched").click();$('<script>',{id:'foo',src:'https://dvere.github.io/labels/assets/js/pcse-labels.js'}).appendTo($('body'))})();
