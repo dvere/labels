@@ -195,7 +195,7 @@ function labelPrint(printObject) {
 }
 
 function setFileName (items) {
-      return items[1] + '_' + items[7]
+      return items[1] + '_' + items[6]
 }
 
 function labelDownload (labelObject) {
