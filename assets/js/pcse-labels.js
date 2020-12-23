@@ -96,13 +96,8 @@ function Details () {
 
 function getCons(order) {
   var p = {tab: order.status}
-  var e = order.detail['Expected Delivery Date']
-
-  if (e !== 'TBA') { 
-    e = e.split('/').reverse().join('-')
-    p.DateRangeStart = p.DateRangeEnd = e
-    p.SearchOn = 5
-  }
+  p.SearchTerm = order.detail['Location Code']
+  p.SearchOn = 4
 
   let url = '/portal/Logistics/Orders?' + $.param(p)
   let req = new Request(url, {credentials: 'include', method: 'GET'})
