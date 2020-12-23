@@ -96,6 +96,8 @@ function Details () {
 
 function getCons(order) {
   var p = {tab: order.status}
+  
+/* Hotfix - multiple pages of orders for a day breaks label printing  
   var e = order.detail['Expected Delivery Date']
 
   if (e !== 'TBA') { 
@@ -103,6 +105,9 @@ function getCons(order) {
     p.DateRangeStart = p.DateRangeEnd = e
     p.SearchOn = 5
   }
+*/
+  p.SearchOn = 4
+  p.SearchTerm = order.detail['Location Code']
 
   let url = '/portal/Logistics/Orders?' + $.param(p)
   let req = new Request(url, {credentials: 'include', method: 'GET'})
