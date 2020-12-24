@@ -95,12 +95,19 @@ function Details () {
 }
 
 function getCons(order) {
-  var p = {tab: order.status}
-  p.SearchTerm = order.detail['Location Code']
-  p.SearchOn = 4
+  var practice = order.detail['Location Code']
+  var data = {
+    headers: {
+      "content-type": "application/x-www-form-urlencoded"
+    },
+    method: 'POST',
+    credentials: 'include',
+    mode: 'cors',
+    body: 'SearchTerm=' + practice + '&SearchOn=4&Tab=ReadyForDespatch'
+  }
 
-  let url = '/portal/Logistics/Orders?' + $.param(p)
-  let req = new Request(url, {credentials: 'include', method: 'GET'})
+  let url = '/portal/Logistics/Orders?tab=ReadyForDespatch'
+  let req = new Request(url, data)
 
   fetch(req)
   .then(response => response.text())
