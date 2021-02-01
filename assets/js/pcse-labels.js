@@ -95,20 +95,17 @@ function Details () {
 }
 
 function getCons(order) {
-  var practice = order.detail['Location Code']
-  var data = {
-    headers: {
-      "content-type": "application/x-www-form-urlencoded"
-    },
-    method: 'POST',
-    credentials: 'include',
-    mode: 'cors',
-    body: 'SearchTerm=' + practice + '&SearchOn=4&Tab=ReadyForDespatch'
+  var p = {tab: order.status}
+  
+  var e = order.detail['Expected Delivery Date']
+  if (e !== 'TBA') { 
+    e = e.split('/').reverse().join('-')
+    p.DateRangeStart = p.DateRangeEnd = e
+    p.SearchOn = 5
   }
 
-  let url = '/portal/Logistics/Orders?tab=ReadyForDespatch'
-  let req = new Request(url, data)
-
+  let url = '/portal/Logistics/Orders?' + $.param(p)
+  let req = new Request(url, {credentials: 'include', method: 'GET'})
   fetch(req)
   .then(response => response.text())
   .then(html => $(html).find('tr:contains('+ order.detail.id +')'))
