@@ -14,7 +14,7 @@ var labelEnd = '\n^XZ\n'
 var tabs = ['Complete', 'ReadyForDespatch', 'Despatched']
 
 function Template () {
-  let format3 = `^LH0,15
+  let format3 = `^LH25,25
 ^FO400,15^GB160,80,80,,0^FS
 ^FO10,30^BY2,3,60^BCN,60,Y,Y^FN0^FS
 ^FO400,120^A0N,80^FN1^FS
@@ -97,21 +97,15 @@ function Details () {
 function getCons(order) {
   var p = {tab: order.status}
   
-/* Hotfix - multiple pages of orders for a day breaks label printing  
   var e = order.detail['Expected Delivery Date']
-
   if (e !== 'TBA') { 
     e = e.split('/').reverse().join('-')
     p.DateRangeStart = p.DateRangeEnd = e
     p.SearchOn = 5
   }
-*/
-  p.SearchOn = 4
-  p.SearchTerm = order.detail['Location Code']
 
   let url = '/portal/Logistics/Orders?' + $.param(p)
   let req = new Request(url, {credentials: 'include', method: 'GET'})
-
   fetch(req)
   .then(response => response.text())
   .then(html => $(html).find('tr:contains('+ order.detail.id +')'))
