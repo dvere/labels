@@ -190,9 +190,10 @@ function labelPrint(printObject) {
     printWindow.document.write('<pre>' + printObject.data + '</pre>')
     printWindow.document.close()
     printWindow.focus()
-    printWindow.alert(printObject.cons)
-    printWindow.print()
-    printWindow.close()
+    navigator.clipboard.writeText(printObject.cons).then(() => {
+        printWindow.print()
+        printWindow.close()
+    })
 }
 
 function setFileName (items) {
