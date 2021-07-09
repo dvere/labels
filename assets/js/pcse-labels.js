@@ -144,6 +144,7 @@ function Label (items) {
     pkgLabels += label
   }
     this.data = template.zpl + pkgLabels
+    navigator.clipboard.writeText(items[0])
 
   switch (fileType) {
     case 'txt':
