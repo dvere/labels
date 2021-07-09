@@ -185,12 +185,12 @@ function zpl2pdf (l) {
 }
 
 function labelPrint(printObject) {
+    navigator.clipboard.writeText(printObject.cons)
     let printWindow = window.open()
     printWindow.document.open()
     printWindow.document.write('<pre>' + printObject.data + '</pre>')
     printWindow.document.close()
     printWindow.focus()
-    navigator.clipboard.writeText(printObject.cons)
     printWindow.print()
     printWindow.close()
 }
