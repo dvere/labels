@@ -189,8 +189,8 @@ function labelPrint(printObject) {
     printWindow.document.open()
     printWindow.document.write('<pre>' + printObject.data + '</pre>')
     printWindow.document.close()
-    printWindow.focus()
     navigator.clipboard.writeText(printObject.cons).then(() => {
+        printWindow.focus()
         printWindow.print()
         printWindow.close()
     })
