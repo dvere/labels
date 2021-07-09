@@ -112,6 +112,7 @@ function getCons(order) {
   .then(row => $(row).find('td').eq(9)[0].innerHTML.split('<br>').sort().reverse()[0])
   .then(tn => {
     order.itemsArray.unshift(tn)
+    navigator.clipboard.writeText(tn)
     var label = new Label(order.itemsArray)
     doOutput(label)
   })
@@ -144,7 +145,6 @@ function Label (items) {
     pkgLabels += label
   }
     this.data = template.zpl + pkgLabels
-    navigator.clipboard.writeText(items[0])
 
   switch (fileType) {
     case 'txt':
