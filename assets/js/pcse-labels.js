@@ -45,10 +45,23 @@ function Template () {
 ^FO150,900^A0N,24^FN5^FS
 ^FO15,1000^A0N,100^FB780,1,0,C^FN8^FS
 ^FO170,1120^BY2^BCN,55,Y^FN6^FS`
+  
+  let format6 = `^LH36,36
+^FO600,24^GB240,120,120,,0^FS
+^FO15,45^BY3,3,90^BCN,90,Y,Y^FN0^FS
+^FO600,180^A0N,120^FN1^FS
+^FO600,330^A0N,90^FN2^FS
+^FO615,36^A0N,120^FR^FN3^FS
+^FO15,270^A0N,36^FN4^FS
+^FO15,180^A0N,64^FN5^FS
+^FO90,460^BY3,3,90^BCN,90,Y,Y^FN6^FS
+^FO10,330^A0N,75^FN8^FS`
 
   this.zpl = '^FX ' + new Date().toISOString() + '\n^XA\n^DFR:DELIVERY.GRF\n'
 
-  if (labelType == 4) {
+  if (labelType == 6) {
+    this.zpl += format6
+  } else if (labelType == 4) {
     this.zpl += format4
   } else {
     this.zpl += format3
