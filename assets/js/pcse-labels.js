@@ -124,10 +124,20 @@ function getCons(order) {
   .then(html => $(html).find('tr:contains('+ order.detail.id +')'))
   .then(row => $(row).find('td').eq(9)[0].innerHTML.split('<br>').sort().reverse()[0])
   .then(tn => {
+    clipboardTn(tn)
     order.itemsArray.unshift(tn)
     var label = new Label(order.itemsArray)
     doOutput(label)
   })
+}
+
+async function clipboardTn(tn) {
+  try {
+    await navigator.clipboard.writeText(tn)
+    console.log('Tracking number '+ tn +' copied')
+  } catch (err) {
+    console.log('Failed to copy tracking number', err)
+  }
 }
 
 function doOutput(l) {
