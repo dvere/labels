@@ -8,7 +8,7 @@ var serviceCentres = {
 var fileType = localStorage.getItem('data-file-type') || 'raw'
 var labelType = localStorage.getItem('data-label-type') || 3
 var path = document.location.pathname.split('/')[3]
-var status = document.getElementById('order-status').value
+var orderStatus = document.getElementById('order-status').value
 var labelStart = '\n\n^XA^XFR:DELIVERY.GRF\n'
 var labelEnd = '\n^XZ\n'
 var tabs = ['Complete', 'ReadyForDespatch', 'Despatched']
@@ -69,8 +69,8 @@ function Template () {
   this.zpl += labelEnd
 }
 
-function checkStatus (status, path) {
-  return (tabs.includes(status) && path === 'Order')
+function checkStatus (orderStatus, path) {
+  return (tabs.includes(orderStatus) && path === 'Order')
 }
 
 function checkQty (qty) {
@@ -80,7 +80,7 @@ function checkQty (qty) {
 
 function Order () {
   this.detail = new Details()
-  this.status = status
+  this.orderStatus = orderStatus
   this.itemsArray = [
     this.detail['Delivery Route And Stop'].substr(0,4),
     this.detail['Location Code'],
@@ -108,7 +108,7 @@ function Details () {
 }
 
 function getCons(order) {
-  var p = {tab: order.status}
+  var p = {tab: order.orderStatus}
   
   var e = order.detail['Expected Delivery Date']
   if (e !== 'TBA') { 
@@ -234,13 +234,13 @@ function labelDownload (labelObject) {
 
 $.when($.ready).then(function() {
 
-  if (!checkStatus(status,path)) return;
+  if (!checkStatus(orderStatus,path)) return;
 
   var qty = prompt("Enter number of packages:", 1)
 
   if (!checkQty(qty)) return;
 
-  var order = new Order(status)
+  var order = new Order(orderStatus)
   order.itemsArray.push(qty)
   getCons(order)
 })
