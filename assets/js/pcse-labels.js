@@ -125,9 +125,11 @@ function getCons(order) {
   .then(row => $(row).find('td').eq(9)[0].innerHTML.split('<br>').sort().reverse()[0])
   .then(tn => {
     clipboardTn(tn)
-    order.itemsArray.unshift(tn)
-    var label = new Label(order.itemsArray)
-    doOutput(label)
+    .then(() => {
+      order.itemsArray.unshift(tn)
+      var label = new Label(order.itemsArray)
+      doOutput(label)
+    })
   })
 }
 
