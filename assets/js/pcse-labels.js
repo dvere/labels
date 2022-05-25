@@ -238,6 +238,12 @@ $.when($.ready).then(function() {
 
   if (!checkStatus(orderStatus,path)) return;
 
+  if (!localStorage['data-label-type']) {
+    let large = confirm('Label size is not set\nDo you want to use large (UPS) labels?')
+    let size = (large)? 4: 3;
+    localStorage.setItem('data-label-type', size)
+  }
+
   var qty = prompt("Enter number of packages:", 1)
 
   if (!checkQty(qty)) return;
