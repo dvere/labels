@@ -12,7 +12,16 @@ var dialogHTML = `
     </div>
   </form>
 </dialog>`
-        
+
+var dialogCSS = `
+<style>
+  #optsDialog {
+    width:500px,
+    height: 400px
+  }
+</style>
+`
+
 var formats = [{
   text: '3 x 2',
   value: 3
