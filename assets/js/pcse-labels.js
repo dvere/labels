@@ -164,7 +164,7 @@ function Label (items) {
 
   for (var i = qty; i > 0; i--) {
     let label = labelStart + commonFields +
-      '\n^FN8^FDPieces: ' + i + ' of ' + qty +
+      '\n^FN8^FDPiece: ' + i + ' of ' + qty +
       '^FS' + labelEnd
     pkgLabels += label
   }
