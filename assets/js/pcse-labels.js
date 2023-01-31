@@ -136,9 +136,9 @@ function getCons(order) {
 async function clipboardTn(tn, id) {
   try {
     await navigator.clipboard.writeText(tn)
-    console.log(`Tracking number ${tn} copied for ${id}`)
+    logger(`Tracking number ${tn} copied for ${id}`)
   } catch (err) {
-    console.log(`Failed to copy: ${tn} - ${id}`, err)
+    logger(`Failed to copy: ${tn} - ${id}`, err)
   }
 }
 
