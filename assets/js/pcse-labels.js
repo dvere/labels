@@ -9,7 +9,7 @@ var fileType = localStorage.getItem('data-file-type') || 'raw'
 var labelType = localStorage.getItem('data-label-type') || 3
 var path = document.location.pathname.split('/')[3]
 var orderStatus = document.getElementById('order-status').value
-var labelStart = '\n\n^XA^XFR:DELIVERY.GRF\n'
+var labelStart = '\n\n^XA^XFR:DELIVERY.ZPL\n'
 var labelEnd = '\n^XZ\n'
 var tabs = ['Complete', 'ReadyForDespatch', 'Despatched']
 
@@ -57,7 +57,7 @@ function Template () {
 ^FO90,460^BY3,3,90^BCN,90,Y,Y^FN6^FS
 ^FO10,330^A0N,75^FN8^FS`
 
-  this.zpl = '^FX ' + new Date().toISOString() + '\n^XA\n^DFR:DELIVERY.GRF\n'
+  this.zpl = '^FX ' + new Date().toISOString() + '\n^XA\n^DFR:DELIVERY.ZPL\n'
 
   if (labelType == 6) {
     this.zpl += format6
