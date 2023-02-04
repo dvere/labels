@@ -185,28 +185,27 @@ function Label (items) {
   }
 }
 
-function zpl2pdf (l) {
+async function zpl2pdf (l) {
   let fd = new FormData()
-  let url = 'https://lab1.dvere.org/l/'
+  let labeler = 'https://lab1.dvere.org/l/'
 
-  fd.append('file',l.data)
+  fd.append('file',l.data.replaceAll('\n',''))
 
   let init = {
     method: 'POST',
-    headers: {
-      'Accept': 'application/pdf'
-    },
     mode: 'cors',
     body: fd,
     credentials: 'omit'
   }
 
-  fetch(url, init)
-  .then(response => response.blob())
-  .then(data => {
-    l.data = data
-    labelDownload(l)
-  })
+  const blob = await fetch(labeler, init)
+  .then(r => r.blob())
+  
+  const url = URL.createObjectURL(blob)
+  const pw = window.open(url)
+  pw.focus()
+  pw.onload = () => pw.print()
+  URL.revokeObjectURL(url)
 }
 
 function labelPrint(printObject) {
