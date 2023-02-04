@@ -189,7 +189,8 @@ async function zpl2pdf (l) {
   let fd = new FormData()
   let labeler = 'https://lab1.dvere.org/l/'
 
-  fd.append('file',l.data.replaceAll('\n',''))
+  let zpl = l.data.replaceAll('\n','').replaceAll('LH25,25','LH10,0')
+  fd.append('file', zpl)
 
   let init = {
     method: 'POST',
