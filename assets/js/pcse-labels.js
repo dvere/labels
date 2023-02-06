@@ -191,6 +191,7 @@ async function zpl2pdf (l) {
 
   let zpl = l.data.replaceAll('\n','').replaceAll('LH25,25','LH15,10')
   fd.append('file', zpl)
+  fd.append('filename', l.filename)
 
   let init = {
     method: 'POST',
