@@ -26,7 +26,7 @@ var formats = [{
   text: '3 x 2',
   value: 3
 },{
-  text: '6 x 4',
+  text: '4 x 6',
   value: 4
 }]
 
