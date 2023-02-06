@@ -124,7 +124,7 @@ function getCons(order) {
   .then(html => $(html).find('tr:contains('+ order.detail.id +')'))
   .then(row => $(row).find('td').eq(9)[0].innerHTML.split('<br>').sort().reverse()[0])
   .then(tn => {
-    clipboardTn(tn, order.detail.id)
+    clipboardTn(tn, order.detail.id, order.itemsArray.at(-1))
     .then(() => {
       order.itemsArray.unshift(tn)
       var label = new Label(order.itemsArray)
@@ -133,10 +133,10 @@ function getCons(order) {
   })
 }
 
-async function clipboardTn(tn, id) {
+async function clipboardTn(tn, id, qty) {
   try {
     await navigator.clipboard.writeText(tn)
-    logger(`Tracking number ${tn} copied for ${id}`)
+    logger(`${id}: ${qty} labels, tracking number ${tn}`)
   } catch (err) {
     logger(`Failed to copy: ${tn} - ${id}`, err)
   }
