@@ -133,8 +133,14 @@ function getCons(order) {
 
 function clipboardTn(tn, id, qty) {
   navigator.clipboard.writeText(tn)
-  .then(() => logger(`${id}: Label count: ${qty}, tracking number: ${tn}`))
-  .catch((err) => logger(`Clipboard copy rejected: ${tn} - ${id}`, err))
+  .then(
+    () => {
+      logger(`${id}: Label count: ${qty}, tracking number: ${tn}`)
+    },
+    () => {
+      logger(`Clipboard copy rejected: ${tn} - ${id}`, err)
+    }
+  )
 }
 
 function doOutput(l) {
