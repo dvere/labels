@@ -185,6 +185,7 @@ function Label (items) {
     default:
       break;
   }
+  console.log(this)
 }
 
 async function zpl2pdf (l) {
