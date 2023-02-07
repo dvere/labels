@@ -171,6 +171,7 @@ function Label (items) {
   }
     this.data = template.zpl + pkgLabels
     this.cons = items[0]
+    this.id = items[6]
     this.qty = qty
 
   switch (fileType) {
