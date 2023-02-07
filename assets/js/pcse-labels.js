@@ -137,7 +137,7 @@ function clipboardTn(tn, id, qty) {
     () => {
       logger(`${id}: Label count: ${qty}, tracking number: ${tn}`)
     },
-    () => {
+    (err) => {
       logger(`Clipboard copy rejected: ${tn} - ${id}`, err)
     }
   )
