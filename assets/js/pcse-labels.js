@@ -156,6 +156,7 @@ function doOutput(l) {
 
 function Label (items) {
   let template = new Template()
+  console.log(items)
   let qty = items.pop()
   let commonFields = items.map(function(v, i) {
     return '^FN' + i + '^FD' + v + '^FS'
@@ -170,6 +171,7 @@ function Label (items) {
   }
     this.data = template.zpl + pkgLabels
     this.cons = items[0]
+    this.qty = qty
 
   switch (fileType) {
     case 'txt':
