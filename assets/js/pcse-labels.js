@@ -125,22 +125,21 @@ function getCons(order) {
   .then(row => $(row).find('td').eq(9)[0].innerHTML.split('<br>').sort().reverse()[0])
   .then(tn => {
     clipboardTn(tn, order.detail.id, order.itemsArray.at(-1))
-    order.itemsArray.unshift(tn)
-    var label = new Label(order.itemsArray)
-    doOutput(label)
+    .then(() => {
+      order.itemsArray.unshift(tn)
+      var label = new Label(order.itemsArray)
+      doOutput(label)
+    })
   })
 }
 
-function clipboardTn(tn, id, qty) {
-  navigator.clipboard.writeText(tn)
-  .then(
-    () => {
-      logger(`${id}: Label count: ${qty}, tracking number: ${tn}`)
-    },
-    (err) => {
-      logger(`Clipboard copy rejected: ${tn} - ${id}`, err)
-    }
-  )
+async function clipboardTn(tn, id, qty) {
+  try {
+    await navigator.clipboard.writeText(tn)  
+    logger(`${id}: Label count: ${qty}, tracking number: ${tn}`)
+  } catch (err) {
+    logger(`Failed to copy: ${tn} - ${id}`, err)
+  }
 }
 
 function doOutput(l) {
