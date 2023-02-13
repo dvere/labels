@@ -143,10 +143,11 @@ async function clipboardTn(tn, id, qty) {
 }
 
 function doOutput(l) {
-  if (l.format === 'application/pdf') {
+  if (fileType === 'pdf') {
     zpl2pdf(l)
   } else {
     if (l.filename) {
+      l.blob = new Blob([l.data], {type: l.format})
       labelDownload(l)
     } else {
       labelPrint(l)
@@ -156,7 +157,7 @@ function doOutput(l) {
 
 function Label (items) {
   let template = new Template()
-  console.log(items)
+  if (userConfig.debug) console.log(items)
   let qty = items.pop()
   let commonFields = items.map(function(v, i) {
     return '^FN' + i + '^FD' + v + '^FS'
@@ -186,7 +187,7 @@ function Label (items) {
     default:
       break;
   }
-  console.log(this)
+  if (userConfig.debug) console.log(this)
 }
 
 async function zpl2pdf (l) {
@@ -204,14 +205,11 @@ async function zpl2pdf (l) {
     credentials: 'omit'
   }
 
-  const blob = await fetch(labeler, init)
+  l.blob = await fetch(labeler, init)
   .then(r => r.blob())
-  
-  const url = URL.createObjectURL(blob)
-  const pw = window.open(url)
-  pw.focus()
-  pw.onload = () => pw.print()
-  URL.revokeObjectURL(url)
+
+  labelDownload(l)
+
 }
 
 function labelPrint(printObject) {
@@ -228,15 +226,14 @@ function setFileName (items) {
       return items[1] + '_' + items[6]
 }
 
-function labelDownload (labelObject) {
+function labelDownload (l) {
     let a = document.createElement('a')
-    let blob = new Blob([labelObject.data], { type: labelObject.format })
-    let url = window.URL.createObjectURL(blob)
+    let u = window.URL.createObjectURL(l.blob)
     a.style = 'display: none'
-    a.href = url
-    a.download = labelObject.filename
+    a.href = u
+    a.download = l.filename
     a.click()
-    window.URL.revokeObjectURL(url)
+    window.URL.revokeObjectURL(u)
 }
 
 $.when($.ready).then(function() {
