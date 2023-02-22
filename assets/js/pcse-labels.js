@@ -134,9 +134,9 @@ function getCons(order) {
 }
 
 async function clipboardTn(tn, id, qty) {
+  logger(`${id}: Label count: ${qty}, tracking number: ${tn}`)
   try {
-    await navigator.clipboard.writeText(tn)  
-    logger(`${id}: Label count: ${qty}, tracking number: ${tn}`)
+    await navigator.clipboard.writeText(tn)
   } catch (err) {
     logger(`Failed to copy: ${tn} - ${id}`, err)
   }
