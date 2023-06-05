@@ -10,7 +10,7 @@ var labelType = localStorage.getItem('data-label-type') || 3
 var path = document.location.pathname.split('/')[3]
 var orderStatus = document.getElementById('order-status').value
 var labelStart = '\n\n^XA^XFR:DELIVERY.ZPL\n'
-var labelEnd = '\n^XZ\n}$'
+var labelEnd = '\n^XZ\n'
 var tabs = ['Complete', 'ReadyForDespatch', 'Despatched']
 
 function Template () {
@@ -170,7 +170,7 @@ function Label (items) {
       '^FS' + labelEnd
     pkgLabels += label
   }
-    this.data = template.zpl + pkgLabels
+    this.data = template.zpl + pkgLabels + '}$'
     this.cons = items[0]
     this.id = items[6]
     this.qty = qty
