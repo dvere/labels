@@ -220,6 +220,9 @@ function labelPrint(printObject) {
     printWindow.focus()
     printWindow.print()
     printWindow.close()
+    if (userConfig.printExtra) {
+      printExtra()
+    }
 }
 
 function setFileName (items) {
