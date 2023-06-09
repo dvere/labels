@@ -214,7 +214,6 @@ async function zpl2pdf (l) {
 
 function labelPrint(printObject) {
     let printWindow = window.open()
-    let parentWindow = printWindow.opener
     printWindow.document.open()
     printWindow.document.write('<pre>' + printObject.data + '</pre>')
     printWindow.document.close()
@@ -224,7 +223,6 @@ function labelPrint(printObject) {
     if (userConfig.printExtra) {
       printExtra()
     }
-    parentWindow.focus()
 }
 
 function setFileName (items) {
