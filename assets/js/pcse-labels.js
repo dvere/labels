@@ -170,10 +170,14 @@ function Label (items) {
       '^FS' + labelEnd
     pkgLabels += label
   }
-    this.data = template.zpl + pkgLabels + '}$'
-    this.cons = items[0]
-    this.id = items[6]
-    this.qty = qty
+  if (userConfig.printExtra) {
+    pkgLabels += printExtra()
+  }
+
+  this.data = template.zpl + pkgLabels + '}$'
+  this.cons = items[0]
+  this.id = items[6]
+  this.qty = qty
 
   switch (fileType) {
     case 'txt':
@@ -213,16 +217,12 @@ async function zpl2pdf (l) {
 }
 
 function labelPrint(printObject) {
-    let printWindow = window.open()
-    printWindow.document.open()
-    printWindow.document.write('<pre>' + printObject.data + '</pre>')
-    printWindow.document.close()
-    printWindow.focus()
-    printWindow.print()
-    printWindow.close()
-    if (userConfig.printExtra) {
-      printExtra()
-    }
+  $('<iframe>', { srcdoc: `<pre>${printObject.data}</pre>`, id: 'pw' })
+    .hide()
+    .appendTo('body')
+    ifr = document.getElementById('pw')
+    ifr.contentWindow.onafterprint = () => ifr.remove()
+    ifr.contentWindow.print()
 }
 
 function setFileName (items) {
