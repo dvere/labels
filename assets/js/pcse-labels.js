@@ -223,6 +223,7 @@ function labelPrint(printObject) {
     if (userConfig.printExtra) {
       printExtra()
     }
+    printWindow.opener.focus()
 }
 
 function setFileName (items) {
