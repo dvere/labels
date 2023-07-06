@@ -1,7 +1,7 @@
 <?php
 
 /*
- * Copyright (c) 2022 Anthony La Porte <ant@dvere.uk>
+ * Copyright (c) 2019 Anthony La Porte <ant@dvere.uk>
  *
  * Permission to use, copy, modify, and distribute this software for any
  * purpose with or without fee is hereby granted, provided that the above
